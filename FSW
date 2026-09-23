@@ -1,0 +1,190 @@
+prog1
+
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>footer { background: #222; color: #fff; padding: 15px; text-align: center; }</style>
+</head>
+<body>
+  <nav class="navbar bg-primary navbar-dark px-3"><a class="navbar-brand" href="#">MCA Dept</a></nav>
+  <div class="container my-4">
+    <h2>About Department</h2>
+    <p>Department of Computer Applications offering industry-focused tech education.</p>
+    <h3 class="mt-4">Courses Offered</h3>
+    <div class="row g-3">
+      <div class="col-md-6"><div class="card p-3 shadow-sm"><h5>MCA (Full Time)</h5><p>Duration: 2 Years | Focus: AI & Cloud</p></div></div>
+      <div class="col-md-6"><div class="card p-3 shadow-sm"><h5>BCA (Undergraduate)</h5><p>Duration: 3 Years | Focus: Web & Data</p></div></div>
+    </div>
+  </div>
+  <footer>&copy; 2026 College Department. All rights reserved.</footer>
+</body>
+</html>
+
+
+
+prog2
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+    .box {
+      width: 500px;                    /* Width */
+      margin: 30px auto;              /* Margin: outside element */
+      padding: 20px;                  /* Padding: space inside border */
+      border: 4px solid #0284c7;       /* Border around section */
+      background-color: #e0f2fe;       /* Distinguish content area */
+      border-radius: 8px;
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <h2>Student ID Card (CSS Box Model)</h2>
+  <div class="box">
+    <h3 style="color:#0369a1; margin-top:0;">John Doe</h3>
+    <p><b>Register Number :</b> 2026MCA101</p>
+    <p><b>Course          :</b> Master of Computer Applications (MCA)</p>
+    <p><b>Email ID        :</b> johndoe@college.edu</p>
+  </div>
+</body>
+</html>
+
+
+prog3
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="p-3">
+  <nav class="navbar navbar-dark bg-dark px-3 rounded">
+    <a class="navbar-brand" href="#">College Portal</a>
+    <div><a class="text-white me-3" href="#">Home</a><a class="text-white me-3" href="#">About</a><a class="text-white" href="#">Contact</a></div>
+  </nav>
+  <div class="card p-4 mt-3 col-md-6 mx-auto shadow-sm">
+   <h4>Student Registration</h4>
+    <form>
+      <input type="text" class="form-control mb-2" placeholder="Full Name" value="John Doe">
+      <input type="email" class="form-control mb-2" placeholder="Email Address" value="john@college.edu">
+      <select class="form-select mb-3"><option>MCA (Computer Applications)</option><option>BCA</option></select>
+      <button type="submit" class="btn btn-primary me-2">Register</button>
+      <button type="reset" class="btn btn-outline-secondary">Reset</button>
+    </form>
+  </div>
+</body>
+</html>
+
+
+
+prog4
+<!DOCTYPE html>
+<html>
+<body>
+  <h3>Dynamic JavaScript Input</h3>
+  <input type="text" id="userInput" placeholder="Enter your name">
+  <button onclick="show()">Submit</button>
+  <p id="result" style="font-weight: bold; color: #0284c7;"></p>
+ 
+  <script>
+    function show() {
+      let val = document.getElementById('userInput').value;
+      document.getElementById('result').innerText = "Result: Hello, " + val + "! Welcome.";
+    }
+  </script>
+</body>
+</html>
+
+
+prog5
+<!DOCTYPE html>
+<html>
+<body>
+  <h3>Registration Form Validation</h3>
+  <form onsubmit="return validate()">
+    <input id="fn" placeholder="First Name"><br><br>
+    <input id="ln" placeholder="Last Name"><br><br>
+    <input id="dob" type="date"><br><br>
+    <input id="phone" placeholder="10-digit Phone"><br><br>
+    <input id="email" placeholder="Email Address"><br><br>
+    <button type="submit">Submit</button>
+  </form>
+  <p id="err" style="color:red; font-weight:bold;"></p>
+ 
+  <script>
+    function validate() {
+      let fn = document.getElementById('fn').value.trim();
+      let ln = document.getElementById('ln').value.trim();
+      let dob = document.getElementById('dob').value;
+      let phone = document.getElementById('phone').value.trim();
+      let email = document.getElementById('email').value.trim();
+      let msg = document.getElementById('err');
+      if (!fn || !ln || !dob || !phone || !email) { msg.innerText = "Error: All fields are required!"; return false; }
+      if (!/^\d{10}$/.test(phone)) { msg.innerText = "Error: Phone number must be exactly 10 digits!"; return false; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.innerText = "Error: Invalid Email format!"; return false; }
+      alert("Registration Successful!");
+      return true;
+    }
+  </script>
+</body>
+</html>
+
+
+
+prog6
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .card { border: 1px solid #cbd5e1; background: #f8fafc; padding: 12px; margin: 8px; border-radius: 6px; width: 140px; display: inline-block; vertical-align: top; }
+    .price { color: #16a34a; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h3>Product Catalog (JS Arrays & Objects)</h3>
+  <div id="container"></div>
+  <script>
+    const products = [
+      { name: "Laptop", price: 55000, category: "Electronics" },
+      { name: "Mobile Phone", price: 25000, category: "Electronics" },
+      { name: "Shoes", price: 2000, category: "Fashion" },
+      { name: "Book", price: 500, category: "Education" }
+    ];
+    let html = "";
+    products.forEach(p => {
+      html += `<div class="card"><h4>${p.name}</h4><p class="price">Rs. ${p.price}</p><small>Category:<br><b>${p.category}</b></small></div>`;
+    });
+    document.getElementById('container').innerHTML = html;
+  </script>
+</body>
+</html>
+
+
+prog7
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>#box { width: 100px; height: 100px; background: #f97316; margin: 10px 0; border-radius: 8px; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; }</style>
+</head>
+<body>
+  <h3>jQuery DOM Effects Demo</h3>
+  <p id="para">This is a paragraph to hide/show.</p>
+  <button id="btnHide">Hide</button> <button id="btnShow">Show</button>
+  <hr>
+  <div id="box">BOX</div>
+  <button id="btnFadeOut">Fade Out</button> <button id="btnFadeIn">Fade In</button> <button id="btnToggle">fadeToggle()</button>
+  <script>
+    $(document).ready(function() {
+      $('#btnHide').click(() => $('#para').hide());
+      $('#btnShow').click(() => $('#para').show());
+      $('#btnFadeOut').click(() => $('#box').fadeOut());
+      $('#btnFadeIn').click(() => $('#box').fadeIn());
+      $('#btnToggle').click(() => $('#box').fadeToggle());
+    });
+  </script>
+</body>
+</html>
+
+
+
