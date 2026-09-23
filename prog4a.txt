@@ -1,3 +1,29 @@
+<html>
+<body>
+
+<h3>Enter Name</h3>
+
+<input id="name">
+<button onclick="show()">Submit</button>
+
+<p id="result"></p>
+
+<script>
+function show() {
+    var n = document.getElementById("name").value;
+    document.getElementById("result").innerHTML = "Hello " + n;
+}
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
