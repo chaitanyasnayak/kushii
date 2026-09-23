@@ -1,3 +1,42 @@
+<html>
+<head>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+
+<body>
+
+<p id="p">Hello! This is a paragraph.</p>
+
+<button id="hide">Hide</button>
+<button id="show">Show</button>
+
+<br><br>
+
+<div id="box" style="width:200px;height:100px;background:skyblue"></div>
+
+<br>
+
+<button id="in">Fade In</button>
+<button id="out">Fade Out</button>
+<button id="toggle">Fade Toggle</button>
+
+<script>
+$("#hide").click(function(){$("#p").hide();});
+$("#show").click(function(){$("#p").show();});
+$("#in").click(function(){$("#box").fadeIn();});
+$("#out").click(function(){$("#box").fadeOut();});
+$("#toggle").click(function(){$("#box").fadeToggle();});
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
