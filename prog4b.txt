@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="form-container">
+        <h2>Create Account</h2>
+        
+        <form id="registerForm" action="/submit" method="POST" enctype="multipart/form-data">
+            
+            <!-- Full Name -->
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="fullName" placeholder="Jane Doe">
+                <div class="error-message" id="nameError">Please enter your full name.</div>
+            </div>
+
+            <!-- Date of Birth (18+) -->
+            <div class="form-group">
+                <label>Date of Birth (18+)</label>
+                <input type="date" id="dob">
+                <div class="error-message" id="dobError">You must be at least 18 years old.</div>
+            </div>
+            
+            <!-- Email -->
+            <div class="form-group">
+                <label>Email Address</label>
+                <input type="text" id="email" placeholder="you@example.com">
+                <div class="error-message" id="emailError">Please enter a valid email.</div>
+            </div>
+
+            <!-- Phone -->
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" id="phone" placeholder="1234567890">
+                <div class="error-message" id="phoneError">Must be exactly 10 digits.</div>
+            </div>
+
+            <!-- Gender (Fixed HTML structure) -->
+            <div class="form-group">
+            <label>Gender</label> <br>
+
+             <input type="radio" name="gender" value="male" id="male"> Male 
+             <input type="radio" name="gender" value="female" id="female"> Female 
+             <input type="radio" name="gender" value="other" id="other"> Other 
+             <div class="error-message" id="genderError">Please select a gender.</div>
+            </div>
+
+            <!-- Today's Date -->
+            <div class="form-group">
+                <label>Today's Date</label>
+                <input type="date" id="todayDate">
+                <div class="error-message" id="todayDateError">Must be exactly today.</div>
+            </div>
+
+            <!-- Photo Upload -->
+            <div class="form-group">
+                <label>Upload Profile Photo</label>
+                <input type="file" id="photo" accept="image/*">
+                <div class="error-message" id="photoError">Please upload a photo.</div>
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="••••••••">
+                <div class="error-message" id="passwordError">Must be at least 8 characters.</div>
+            </div>
+
+            <button type="submit">Sign Up</button>
+            
+        </form>
+    </div>
+
+    <script>
+        // 1. Setup Dates on Page Load using a shortcut
+        const todayStr = new Date().toISOString().split('T')[0];
+        
+        let eighteenAgo = new Date();
+        eighteenAgo.setFullYear(eighteenAgo.getFullYear() - 18);
+        const maxDobStr = eighteenAgo.toISOString().split('T')[0];
+
+        // Restrict calendar pickers
+        document.getElementById('todayDate').setAttribute('min', todayStr);
+        document.getElementById('todayDate').setAttribute('max', todayStr);
+        document.getElementById('dob').setAttribute('max', maxDobStr);
+
+        // 2. Validate on Submit
+        document.getElementById('registerForm').onsubmit = function(event) {
+            let isValid = true;
+
+            // SHORTCUT: A single function handles showing/hiding every error
+            function check(errorId, condition) {
+                document.getElementById(errorId).style.display = condition ? 'none' : 'block';
+                if (!condition) isValid = false;
+            }
+
+            // Get values easily
+            const val = (id) => document.getElementById(id).value.trim();
+
+            // Run Checks
+            check('nameError', val('fullName') !== '');
+            check('todayDateError', val('todayDate') === todayStr);
+            
+            // Check DOB is 18+
+            let dob = val('dob');
+            let age = new Date().getFullYear() - new Date(dob).getFullYear();
+            check('dobError', dob !== '' && age >= 18);
+            
+            check('emailError', val('email').includes('@'));
+            
+            // Check Phone is 10 digits and only numbers
+            let phone = val('phone');
+            check('phoneError', phone.length === 10 && !isNaN(phone));
+            
+            check('genderError', document.querySelector('input[name="gender"]:checked') !== null);
+            check('photoError', document.getElementById('photo').files.length > 0);
+            check('passwordError', val('password').length >= 8);
+
+            // Stop form submission if there are errors
+            if (!isValid) {
+                event.preventDefault();
+            } else {
+                event.preventDefault(); // Remove this line in a real project
+                alert("Form submitted successfully! You are 18+.");
+            }
+        };
+    </script>
+</body>.
+</html>

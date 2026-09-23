@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vagabond India Tours | 3 Premium Travel Packages</title>
+  <style>
+    /* Reset & Page Setup */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+    body { background: #39929c; padding: 40px; }
+
+    /* BRAND HEADER STYLING */
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #fff;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    header p {
+      color: #e0f2f1;
+      font-size: 1.1rem;
+    }
+
+    /* CARD CONTAINER */
+    .container {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* CORE BOX MODEL */
+    .card {
+      width: 320px;
+      background: #fff;
+      border: 1px solid #ddd;   /* BORDER */
+      padding: 20px;            /* PADDING: Inner spacing */
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    /* IMAGE IMPLEMENTATION WITH MARGIN */
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 15px;     /* MARGIN: Pushes text below away from the photo */
+    }
+
+    h3 { color: #1e293b; margin-bottom: 8px; } 
+    .card p { color: #64748b; font-size: 0.9rem; line-height: 1.4; margin-bottom: 15px; }
+
+    ul { list-style: none; border-top: 1px solid #eee; padding-top: 12px; margin-bottom: 20px; }
+    li { font-size: 0.85rem; color: #475569; margin-bottom: 6px; }
+
+    .flex { display: flex; justify-content: space-between; align-items: center; }
+    .price { font-size: 1.3rem; font-weight: bold; color: #0f172a; }
+    .price small { font-size: 0.75rem; color: #64748b; display: block; font-weight: normal; }
+    
+    button { background: #0f172a; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <!-- UNIQUE TRAVEL AGENCY BRANDING -->
+  <header>
+    <h1>✨ Vagabond India Tours</h1>
+    <p>Handcrafted journeys designed for the modern explorer</p>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <img src="https://www.kashmirtourpackage.org/blog/wp-content/uploads/2024/02/Trip-To-Kashmir.jpg" alt="Kashmir">
+      <h3>🏔️ Kashmir Paradise</h3>
+      <p>Explore Gulmarg and Pahalgam valleys. Stay in a traditional luxury houseboat on Dal Lake surrounded by snow peaks.</p>
+      <ul>
+        <li>✓ 5 Nights Premium Hotel Stay</li>
+        <li>✓ Shikara Ride & Dinner Included</li>
+        <li>✓ Private AC Vehicle Tour</li>
+      </ul>
+      <div class="flex">
+        <div class="price">₹24,999<small>per person</small></div>
+        <button>Book</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=500" alt="Kerala">
+      <h3>🌴 Kerala Backwaters</h3>
+      <p>Unwind in Alleppey's backwaters and explore Munnar's tea gardens. Includes wildlife safaris and coastal relaxation.</p>
+      <ul>
+        <li>✓ 4 Nights Resort Lodging</li>
+        <li>✓ Overnight Houseboat Cruise</li>
+        <li>✓ Daily Breakfast Buffet</li>
+      </ul>
+      <div class="flex">
+        <div class="price">₹18,500<small>per person</small></div>
+        <button>Book</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=500" alt="Goa">
+      <h3>🏖️ Goa Beaches</h3>
+      <p>Relax on pristine white sand beaches, explore historic Portuguese forts, and experience vibrant coastal nightlife.</p>
+      <ul>
+        <li>✓ 3 Nights Beachfront Resort</li>
+        <li>✓ Complimentary Scuba Diving</li>
+        <li>✓ South Goa Sightseeing Tour</li>
+      </ul>
+      <div class="flex">
+        <div class="price">₹12,499<small>per person</small></div>
+        <button>Book</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

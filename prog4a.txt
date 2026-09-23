@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Registration Form</title>
+<style>
+body{font-family:Arial;background:lightblue;}
+.container{display:flex;justify-content:center;gap:30px;margin-top:40px;}
+.form,.output{width:280px;padding:20px;border:2px solid blue;background:white;}
+input{width:95%;padding:8px;margin:8px 0;}
+button{width:100%;padding:8px;background:blue;color:white;border:none;}
+.output{display:none;text-align:center;}
+img{width:100px;height:100px;border:1px solid black;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="form">
+<h2>Registration Form</h2>
+
+<input type="text" id="name" placeholder="Name">
+<input type="email" id="email" placeholder="Email">
+<input type="text" id="course" placeholder="Course">
+<input type="text" id="year" placeholder="Year">
+<input type="file" id="photo"><br><br>
+
+<button onclick="show()">Create</button>
+</div>
+
+<div class="output" id="out">
+<img id="img"><br><br>
+<p><b>Name:</b> <span id="n"></span></p>
+<p><b>Email:</b> <span id="e"></span></p>
+<p><b>Course:</b> <span id="c"></span></p>
+<p><b>Year:</b> <span id="y"></span></p>
+</div>
+
+</div>
+
+<script>
+function show(){
+n.innerHTML=name.value;
+e.innerHTML=email.value;
+c.innerHTML=course.value;
+y.innerHTML=year.value;
+
+let f=photo.files[0];
+if(f){
+let r=new FileReader();
+r.onload=function(){img.src=r.result;}
+r.readAsDataURL(f);
+}
+out.style.display="block";
+}
+</script>
+
+</body>
+</html>
