@@ -1,4 +1,38 @@
 <!DOCTYPE html>
+<html>
+<head>
+<style>
+.card {
+    width:300px;
+    height:200px;
+    margin:50px auto;
+    padding:20px;
+    border:3px solid blue;
+    background-color:lightblue;
+}
+</style>
+</head>
+
+<body>
+<div class="card">
+    <h2>Student ID Card</h2>
+    <p>Name: Rahul</p>
+    <p>Register No: 101</p>
+    <p>Course: BCA</p>
+    <p>Email: rahul@gmail.com</p>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
