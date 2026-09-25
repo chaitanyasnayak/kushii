@@ -1,0 +1,135 @@
+prog1
+ules = {
+ "hi": "Hi! How are you? I just got back from walking my dog. Do you have any pets?",
+ "no tell me about your pet": "I have a dog and a cat. I love them both so much. Do you have any
+pets?",
+ "no i dont have pet but i like dogs though": "Dogs are great. They are man's best friend for
+sure. What kind of dog do you have?",
+ "pug": "I have a pug. They are a small, short-haired breed of dog."
+}
+print("Chatbot: Hello! Type 'bye' to exit.")
+while True:
+ user_input = input("You: ").strip().lower()
+ if user_input == "bye":
+ print("Chatbot: Goodbye")
+ break
+ print("Chatbot:", rules.get(user_input, "I see! Tell me more."))
+
+
+
+prog2
+f minimax(depth, idx, is_max, vals):
+ if depth == 3:
+ return vals[idx]
+ l = minimax(depth + 1, idx * 2, not is_max, vals)
+ r = minimax(depth + 1, idx * 2 + 1, not is_max, vals)
+ return max(l, r) if is_max else min(l, r)
+leaf_values = [3, 5, 2, 9, 12, 5, 23, 23]
+print("Leaf values:", leaf_values)
+print("Best value according to Minimax:", minimax(0, 0, True, leaf_values))
+
+
+
+prog3
+from queue import PriorityQueue
+graph = {'A': [('B', 1), ('C', 3)], 'B': [('D', 3), ('E', 1)], 'C': [('F', 5)], 'D': [], 'E': [],
+'F': []}
+print("Best-First Search (Greedy)
+Graph Connections:")
+for k, v in graph.items():
+ print(f"{k} -> {v}")
+pq, visited, path, total_cost = PriorityQueue(), set(), [], 0
+pq.put((0, 'A'))
+while not pq.empty():
+ cost, node = pq.get()
+ if node in visited:
+ continue
+ print(f"
+Visiting: {node} (Current Cost: {cost})")
+ visited.add(node)
+ path.append(node)
+ total_cost += cost
+ if node == 'F':
+ print("
+Goal Node Reached!")
+ break
+ for neighbor, weight in graph[node]:
+ if neighbor not in visited:
+ print(f"Adding neighbor: {neighbor} with weight {weight}")
+ pq.put((weight, neighbor))
+print(f"
+Results
+Path: {'→'.join(path)}
+Total Cost: {total_cost}")
+print("Note: Best-First doesn't guarantee optimal path!")
+
+
+
+prog4
+import itertools
+w1 = input("Enter the first word: ").strip().upper()
+w2 = input("Enter the second word: ").strip().upper()
+res = input("Enter the result word: ").strip().upper()
+letters = list(set(w1 + w2 + res))
+firsts = {w1[0], w2[0], res[0]}
+for p in itertools.permutations(range(10), len(letters)):
+ d = dict(zip(letters, p))
+ if any(d[c] == 0 for c in firsts):
+ continue
+ n1 = int("".join(str(d[c]) for c in w1))
+ n2 = int("".join(str(d[c]) for c in w2))
+ nr = int("".join(str(d[c]) for c in res))
+ if n1 + n2 == nr:
+ print(f"
+Solution Found!
+{w1}={n1}
+{w2}={n2}
+{res}={nr}")
+ print(f"Letter Mapping: {d}")
+ break
+
+
+
+
+prog5
+from collections import deque
+
+def solve(j1, j2, target):
+    q = deque([(0, 0)])
+    visited = set([(0, 0)])
+
+    while q:
+        x, y = q.popleft()
+
+        print(f"Visited state: X={x}L, Y={y}L")
+
+        if x == target or y == target:
+            print("Goal reached!")
+            return
+
+        moves = {
+            (j1, y),  # Fill X
+            (x, j2),  # Fill Y
+            (0, y),   # Empty X
+            (x, 0),   # Empty Y
+
+            # Pour X -> Y
+            (
+                x - min(x, j2 - y),
+                y + min(x, j2 - y)
+            ),
+
+            # Pour Y -> X
+            (
+                x + min(y, j1 - x),
+                y - min(y, j1 - x)
+            )
+        }
+
+        for state in moves:
+            if state not in visited:
+                visited.add(state)
+                q.append(state)
+
+
+solve(4, 3, 2)
