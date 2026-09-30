@@ -1,0 +1,335 @@
+USE nutri;
+
+
+CREATE TABLE Users (
+    user_id INT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    age INT CHECK(age >= 18),
+    email VARCHAR(50) UNIQUE
+);
+
+
+CREATE TABLE Food (
+    food_id INT PRIMARY KEY,
+    food_name VARCHAR(50) NOT NULL,
+    calories INT CHECK(calories > 0),
+    user_id INT FOREIGN KEY REFERENCES Users(user_id)
+);
+
+
+
+
+CREATE TABLE MealPlan (
+    meal_id INT PRIMARY KEY,
+    meal_name VARCHAR(50) NOT NULL,
+    meal_type VARCHAR(30),
+    user_id INT FOREIGN KEY REFERENCES Users(user_id)
+);
+
+
+CREATE TABLE Exercise (
+    exercise_id INT PRIMARY KEY,
+    exercise_name VARCHAR(50) NOT NULL,
+    duration INT CHECK(duration > 0),
+    calories_burned INT CHECK(calories_burned > 0),
+    user_id INT FOREIGN KEY REFERENCES Users(user_id)
+);
+
+
+INSERT INTO Users VALUES
+(1,'Monika',20,'monika@gmail.com'),
+(2,'Rahul',22,'rahul@gmail.com'),
+(3,'Anu',21,'anu@gmail.com');
+
+
+INSERT INTO Food VALUES
+(101,'Apple',95,1),
+(102,'Banana',105,2),
+(103,'Oats',150,3),
+(104,'Egg',78,1);
+
+
+-- Insert values into MealPlan
+
+INSERT INTO MealPlan VALUES
+(201,'Oats Breakfast','Breakfast',1),
+(202,'Rice and Chicken','Lunch',2),
+(203,'Vegetable Salad','Dinner',3),
+(204,'Egg and Toast','Breakfast',1);
+
+
+-- Insert values into Exercise
+
+INSERT INTO Exercise VALUES
+(301,'Running',30,250,1),
+(302,'Walking',45,180,2),
+(303,'Cycling',40,300,3),
+(304,'Yoga',30,120,1);
+
+
+-- DDL Commands
+
+CREATE TABLE Test(
+    id INT PRIMARY KEY,
+    name VARCHAR(20)
+);
+
+ALTER TABLE Test ADD age INT;
+
+DROP TABLE Test;
+
+
+-- DML Commands
+
+INSERT INTO Users
+VALUES (4,'Kiran',25,'kiran@gmail.com');
+
+UPDATE Users
+SET age = 21
+WHERE user_id = 1;
+
+DELETE FROM Users
+WHERE user_id = 4;
+
+SELECT * FROM Users;
+
+
+-- DCL Commands
+
+GRANT SELECT ON Users TO PUBLIC;
+
+REVOKE SELECT ON Users FROM PUBLIC;
+
+
+-- TCL Commands
+
+BEGIN TRANSACTION;
+
+UPDATE Users
+SET age = 23
+WHERE user_id = 2;
+
+ROLLBACK;
+
+
+-- COMMIT Example
+
+BEGIN TRANSACTION;
+
+UPDATE Users
+SET age = 24
+WHERE user_id = 2;
+
+COMMIT;
+
+
+-- 1b(c). Integrity Constraints
+
+
+-- 1b(d). Built-in Functions
+
+SELECT GETDATE();
+
+SELECT CAST(GETDATE() AS TIME);
+
+SELECT ROUND(125.678,2);
+
+SELECT ABS(-50);
+
+SELECT UPPER(name), LOWER(name)
+FROM Users;
+
+SELECT LEN(name)
+FROM Users;
+
+SELECT CONVERT(VARCHAR, age)
+FROM Users;
+
+
+-- 1c(e). Joins
+
+SELECT Users.name, Food.food_name
+FROM Users
+INNER JOIN Food
+ON Users.user_id = Food.user_id;
+
+
+SELECT Users.name, Food.food_name
+FROM Users
+LEFT JOIN Food
+ON Users.user_id = Food.user_id;
+
+
+SELECT Users.name, Food.food_name
+FROM Users
+RIGHT JOIN Food
+ON Users.user_id = Food.user_id;
+
+
+SELECT Users.name, Food.food_name
+FROM Users
+FULL JOIN Food
+ON Users.user_id = Food.user_id;
+
+
+-- Join with MealPlan
+
+SELECT Users.name, MealPlan.meal_name, MealPlan.meal_type
+FROM Users
+INNER JOIN MealPlan
+ON Users.user_id = MealPlan.user_id;
+
+
+-- Join with Exercise
+
+SELECT Users.name, Exercise.exercise_name, Exercise.duration
+FROM Users
+INNER JOIN Exercise
+ON Users.user_id = Exercise.user_id;
+
+
+-- 1c(f). Subqueries
+
+SELECT name, age
+FROM Users
+WHERE age > (SELECT AVG(age) FROM Users);
+
+
+SELECT food_name, calories
+FROM Food
+WHERE calories > (SELECT AVG(calories) FROM Food);
+
+
+-- Correlated Subquery
+
+SELECT name
+FROM Users U
+WHERE EXISTS (
+    SELECT *
+    FROM Food F
+    WHERE F.user_id = U.user_id
+);
+
+
+-- 2b(a). Views, Synonyms and Sequences
+
+CREATE VIEW UserFood AS
+SELECT Users.name, Food.food_name, Food.calories
+FROM Users
+JOIN Food
+ON Users.user_id = Food.user_id;
+
+SELECT * FROM UserFood;
+
+
+CREATE SYNONYM FoodDetails
+FOR Food;
+
+SELECT * FROM FoodDetails;
+
+
+CREATE SEQUENCE UserSeq
+START WITH 1
+INCREMENT BY 1;
+
+SELECT NEXT VALUE FOR UserSeq;
+
+
+-- 2b(b). T-SQL Blocks
+
+-- Fibonacci
+
+DECLARE @n INT = 10;
+DECLARE @a INT = 0;
+DECLARE @b INT = 1;
+DECLARE @c INT;
+
+WHILE @a <= @n
+BEGIN
+    PRINT @a;
+
+    SET @c = @a + @b;
+    SET @a = @b;
+    SET @b = @c;
+END;
+
+
+-- Sum of First N Natural Numbers
+
+DECLARE @n INT = 10;
+DECLARE @i INT = 1;
+DECLARE @sum INT = 0;
+
+WHILE @i <= @n
+BEGIN
+    SET @sum = @sum + @i;
+    SET @i = @i + 1;
+END;
+
+PRINT @sum;
+
+
+-- 2c. Error Handling / Exception Handling
+
+BEGIN TRY
+    SELECT 10 / 0 AS Result;
+END TRY
+
+BEGIN CATCH
+    PRINT 'Error occurred';
+END CATCH;
+
+
+BEGIN TRY
+    DECLARE @x INT = 10;
+    DECLARE @y INT = 0;
+
+    PRINT @x / @y;
+END TRY
+
+BEGIN CATCH
+    PRINT ERROR_MESSAGE();
+END CATCH;
+
+
+-- 5. Implement JSON Datatypes
+
+CREATE TABLE UserJSON (
+    UserID INT PRIMARY KEY,
+    UserDetails NVARCHAR(MAX)
+);
+
+
+INSERT INTO UserJSON VALUES
+(1,'{"Name":"Monika","Age":20,"Goal":2000}'),
+(2,'{"Name":"Rahul","Age":22,"Goal":2200}'),
+(3,'{"Name":"Anu","Age":21,"Goal":1800}');
+
+
+-- JSON
+
+SELECT UserDetails, ISJSON(UserDetails) AS IsValid
+FROM UserJSON;
+
+SELECT * FROM UserJSON;
+
+
+-- 5(c). JSON Query
+
+SELECT JSON_VALUE(UserDetails,'$.Name') AS Name
+FROM UserJSON;
+
+
+SELECT JSON_VALUE(UserDetails,'$.Age') AS Age
+FROM UserJSON;
+
+
+SELECT JSON_VALUE(UserDetails,'$.Goal') AS CalorieGoal
+FROM UserJSON;
+
+
+SELECT
+JSON_VALUE(UserDetails,'$.Name') AS Name,
+JSON_VALUE(UserDetails,'$.Age') AS Age,
+JSON_VALUE(UserDetails,'$.Goal') AS Goal
+FROM UserJSON;
