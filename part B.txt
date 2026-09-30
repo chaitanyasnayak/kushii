@@ -1,0 +1,257 @@
+//b
+
+//mobile recharge
+CREATE TABLE Mobile_Recharge (
+    Recharge_ID INT,
+    Customer_ID INT,
+    Customer_Name VARCHAR(30),
+    Amount DECIMAL(10,2)
+);
+
+INSERT INTO Mobile_Recharge VALUES
+(1,101,'Ravi',299),
+(2,102,'Kiran',499),
+(3,103,'Anil',199),
+(4,104,'Priya',599);
+
+
+///Create Views, Synonyms, Sequences
+//view
+CREATE VIEW Recharge_View AS
+SELECT Customer_Name, Amount
+FROM Mobile_Recharge;
+
+SELECT * FROM Recharge_View;
+
+//synonym
+CREATE SYNONYM Recharge
+FOR Mobile_Recharge;
+
+SELECT * FROM Recharge;
+
+
+CREATE SEQUENCE Recharge_Seq
+START WITH 5
+INCREMENT BY 1;
+
+SELECT NEXT VALUE FOR Recharge_Seq AS New_Recharge_ID;
+
+
+
+//sequence
+CREATE SEQUENCE Recharge_Seq
+START WITH 5
+INCREMENT BY 1;
+
+
+SELECT NEXT VALUE FOR Recharge_Seq AS New_Recharge_ID;
+
+
+
+
+
+B)
+
+
+//Print Odd Numbers from 1 to N
+DECLARE @N INT;
+DECLARE @i INT = 1;
+
+SET @N = 10;  -- User enters N
+
+WHILE @i <= @N
+BEGIN
+    IF @i % 2 <> 0
+        PRINT @i;
+
+    SET @i = @i + 1;
+END;
+
+
+
+
+//Sum of First N Natural Numbers
+DECLARE @N INT;
+DECLARE @i INT = 1;
+DECLARE @Sum INT = 0;
+
+SET @N = 10;  -- User enters N
+
+WHILE @i <= @N
+BEGIN
+    SET @Sum = @Sum + @i;
+    SET @i = @i + 1;
+END;
+
+PRINT 'Sum = ' + CAST(@Sum AS VARCHAR(10));
+
+
+
+
+
+//Fibonacci Series
+DECLARE @N INT;
+DECLARE @A INT = 0;
+DECLARE @B INT = 1;
+DECLARE @C INT;
+
+SET @N = 20;  -- User enters N
+
+PRINT @A;
+PRINT @B;
+
+WHILE @A + @B <= @N
+BEGIN
+    SET @C = @A + @B;
+    PRINT @C;
+
+    SET @A = @B;
+    SET @B = @C;
+END;
+
+
+
+
+
+
+
+//Reverse a Given Number
+DECLARE @N INT;
+DECLARE @Reverse INT = 0;
+DECLARE @Digit INT;
+
+SET @N = 12345;  -- User enters number
+
+WHILE @N > 0
+BEGIN
+    SET @Digit = @N % 10;
+    SET @Reverse = (@Reverse * 10) + @Digit;
+    SET @N = @N / 10;
+END;
+
+PRINT 'Reverse = ' + CAST(@Reverse AS VARCHAR(10));
+
+
+
+
+
+2c
+
+//Error Handling & Exception Handling in SQL
+//mobilerecharge
+
+CREATE TABLE Mobile_Recharge (
+    Recharge_ID INT PRIMARY KEY,
+    Customer_Name VARCHAR(30),
+    Amount DECIMAL(10,2)
+);
+
+INSERT INTO Mobile_Recharge
+VALUES (1, 'Ravi', 299),
+       (2, 'Kiran', 499);
+
+
+//try catch
+BEGIN TRY
+
+    INSERT INTO Mobile_Recharge
+    VALUES (1, 'Anil', 199);
+
+END TRY
+
+BEGIN CATCH
+
+    PRINT 'Error: Recharge ID already exists';
+
+END CATCH;
+
+
+//exception handling
+BEGIN TRY
+
+    DECLARE @Amount DECIMAL(10,2);
+    SET @Amount = -100;
+
+    IF @Amount <= 0
+        THROW 50001, 'Recharge amount must be greater than zero', 1;
+
+END TRY
+
+BEGIN CATCH
+
+    SELECT ERROR_MESSAGE() AS Error_Message;
+
+END CATCH;
+
+
+
+//sql error details
+BEGIN TRY
+
+    INSERT INTO Mobile_Recharge
+    VALUES (1, 'Priya', 599);
+
+END TRY
+
+BEGIN CATCH
+
+    SELECT
+        ERROR_NUMBER() AS Error_Number,
+        ERROR_MESSAGE() AS Error_Message;
+
+END CATCH;
+
+
+
+
+
+
+
+
+5)
+//JSON dattype
+
+CREATE TABLE Mobile_Recharge (
+    Recharge_ID INT PRIMARY KEY,
+    Customer_Name VARCHAR(30),
+    Recharge_Info NVARCHAR(MAX)
+);
+
+
+INSERT INTO Mobile_Recharge
+VALUES
+(1, 'Ravi',
+ '{"mobile":"9876543210","amount":299,"plan":"1.5GB/day"}'),
+
+(2, 'Kiran',
+ '{"mobile":"9876501234","amount":499,"plan":"2GB/day"}');
+
+
+//read json
+SELECT Customer_Name,
+       JSON_VALUE(Recharge_Info, '$.mobile') AS Mobile,
+       JSON_VALUE(Recharge_Info, '$.amount') AS Amount
+FROM Mobile_Recharge;
+
+
+valid json
+SELECT Customer_Name,
+       ISJSON(Recharge_Info) AS Valid_JSON
+FROM Mobile_Recharge;
+
+
+
+//extract
+SELECT *
+FROM OPENJSON(
+    (SELECT Recharge_Info
+     FROM Mobile_Recharge
+     WHERE Recharge_ID = 1)
+);
+
+
+
+SELECT Customer_Name,
+       JSON_VALUE(Recharge_Info, '$.amount') AS Amount
+FROM Mobile_Recharge;
+

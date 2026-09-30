@@ -1,0 +1,203 @@
+1b SQL OPERATIONS
+
+//Create Customer Table
+CREATE TABLE Customer (
+    Customer_ID INT PRIMARY KEY,
+    Name VARCHAR(30) NOT NULL,
+    Mobile_No VARCHAR(10) UNIQUE,
+    Age INT CHECK (Age >= 18)
+);
+
+
+//Create Recharge Table
+CREATE TABLE Recharge (
+    Recharge_ID INT PRIMARY KEY,
+    Customer_ID INT,
+    Amount DECIMAL(10,2) CHECK (Amount > 0),
+    Recharge_Date DATE,
+    Recharge_Time TIME,
+    FOREIGN KEY (Customer_ID) REFERENCES Customer(Customer_ID)
+);
+
+
+INSERT INTO Customer
+VALUES (101, 'Ravi', '9876543210', 22);
+INSERT INTO Customer
+VALUES (102, 'Kiran', '9876501234', 21);
+
+INSERT INTO Recharge
+VALUES
+(1, 101, 299.00, '2026-09-29', '09:30:00');
+
+INSERT INTO Recharge
+VALUES
+(2, 102, 499.00, '2026-09-29', '10:15:00');
+
+
+
+//Built-in Functions
+//creat one table
+CREATE TABLE Mobile_Recharge (
+    Recharge_ID INT PRIMARY KEY,
+    Customer_ID INT,
+    Customer_Name VARCHAR(30),
+    Amount DECIMAL(10,2),
+    Recharge_Date DATE,
+    Recharge_Time TIME
+);
+
+
+//insert data
+INSERT INTO Mobile_Recharge
+VALUES
+(1, 101, 'Ravi', 299.00, '2026-09-29', '09:30:00'),
+(2, 102, 'Kiran', 499.00, '2026-09-29', '10:15:00'),
+(3, 103, 'Anil', 199.00, '2026-09-28', '11:45:00'),
+(4, 104, 'Priya', 599.00, '2026-09-27', '14:20:00');
+
+SELECT * FROM Mobile_Recharge;
+
+
+SELECT Customer_Name, Amount,
+       ROUND(Amount) AS Rounded_Amount
+FROM Mobile_Recharge;
+
+//uppercase
+SELECT Customer_Name,
+       UPPER(Customer_Name) AS Upper_Name
+FROM Mobile_Recharge;
+
+
+
+
+
+1c
+
+//customer
+CREATE TABLE Customer (
+    Customer_ID INT PRIMARY KEY,
+    Customer_Name VARCHAR(30),
+    Mobile_No VARCHAR(10)
+);
+
+//Insert Data
+INSERT INTO Customer VALUES
+(101, 'Ravi', '9876543210'),
+(102, 'Kiran', '9876501234'),
+(103, 'Anil', '9876512345'),
+(104, 'Priya', '9876523456');
+
+
+//Recharge
+CREATE TABLE Recharge (
+    Recharge_ID INT PRIMARY KEY,
+    Customer_ID INT,
+    Amount DECIMAL(10,2),
+    Recharge_Date DATE
+);
+
+
+//inner dat
+INSERT INTO Recharge VALUES
+(1, 101, 299.00, '2026-09-29'),
+(2, 102, 499.00, '2026-09-29'),
+(3, 103, 199.00, '2026-09-28'),
+(4, 105, 599.00, '2026-09-27');
+
+
+//inner join
+SELECT Customer.Customer_Name,
+       Recharge.Recharge_ID,
+       Recharge.Amount
+FROM Customer
+INNER JOIN Recharge
+ON Customer.Customer_ID = Recharge.Customer_ID;
+
+
+//left join
+SELECT Customer.Customer_Name,
+       Recharge.Recharge_ID,
+       Recharge.Amount
+FROM Customer
+LEFT JOIN Recharge
+ON Customer.Customer_ID = Recharge.Customer_ID;
+
+
+//right join
+SELECT Customer.Customer_Name,
+       Recharge.Recharge_ID,
+       Recharge.Amount
+FROM Customer
+RIGHT JOIN Recharge
+ON Customer.Customer_ID = Recharge.Customer_ID;
+
+
+//fullouter join
+SELECT Customer.Customer_Name,
+       Recharge.Recharge_ID,
+       Recharge.Amount
+FROM Customer
+LEFT JOIN Recharge
+ON Customer.Customer_ID = Recharge.Customer_ID
+
+UNION
+
+SELECT Customer.Customer_Name,
+       Recharge.Recharge_ID,
+       Recharge.Amount
+FROM Customer
+RIGHT JOIN Recharge
+ON Customer.Customer_ID = Recharge.Customer_ID;
+
+
+
+
+
+
+
+
+
+
+
+
+//shotcut
+//creat table
+CREATE TABLE Mobile_Recharge (
+    Recharge_ID INT PRIMARY KEY,
+    Customer_ID INT,
+    Customer_Name VARCHAR(30),
+    Amount DECIMAL(10,2)
+);
+
+//insert data
+INSERT INTO Mobile_Recharge VALUES
+(1,101,'Ravi',299),
+(2,102,'Kiran',499),
+(3,103,'Anil',199),
+(4,104,'Priya',599);
+
+
+//self join
+SELECT A.Customer_Name AS Customer1,
+       B.Customer_Name AS Customer2
+FROM Mobile_Recharge A
+JOIN Mobile_Recharge B
+ON A.Customer_ID < B.Customer_ID;
+
+/sub query
+SELECT Customer_Name, Amount
+FROM Mobile_Recharge
+WHERE Amount > (
+    SELECT AVG(Amount)
+    FROM Mobile_Recharge
+);
+
+//correlated 
+SELECT A.Customer_Name, A.Amount
+FROM Mobile_Recharge A
+WHERE A.Amount > (
+    SELECT B.Amount
+    FROM Mobile_Recharge B
+    WHERE B.Recharge_ID = A.Recharge_ID - 1
+);
+
