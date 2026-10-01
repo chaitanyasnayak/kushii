@@ -333,3 +333,12 @@ JSON_VALUE(UserDetails,'$.Name') AS Name,
 JSON_VALUE(UserDetails,'$.Age') AS Age,
 JSON_VALUE(UserDetails,'$.Goal') AS Goal
 FROM UserJSON;
+
+
+
+
+CREATE TABLE UserJSON (
+    UserID INT PRIMARY KEY,
+    UserDetails NVARCHAR(MAX),
+    CHECK (ISJSON(UserDetails) = 1)
+);
