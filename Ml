@@ -1,0 +1,370 @@
+Apriori 
+import pandas as pd
+import matplotlib.pyplot as plt
+from mlxtend.frequent_patterns import apriori, association_rules
+
+# Transactions
+transactions = [
+    ['Milk', 'Bread'],
+    ['Milk', 'Bread', 'Butter'],
+    ['Bread', 'Butter'],
+    ['Milk', 'Bread'],
+    ['Milk', 'Butter'],
+    ['Bread', 'Butter', 'Jam']
+]
+
+# Convert transactions to one-hot format
+items = sorted(set(item for t in transactions for item in t))
+
+data = []
+for transaction in transactions:
+    data.append([1 if item in transaction else 0 for item in items])
+
+df = pd.DataFrame(data, columns=items)
+
+# Apriori
+frequent_items = apriori(df, min_support=0.3, use_colnames=True)
+
+print("Frequent Itemsets:")
+print(frequent_items)
+
+# Association rules
+rules = association_rules(
+    frequent_items,
+    metric="confidence",
+    min_threshold=0.5
+)
+
+print("\nAssociation Rules:")
+print(rules[['antecedents', 'consequents', 'support', 'confidence']])
+
+# User input - unseen transaction
+user_items = input("\nEnter items in a new transaction separated by comma: ")
+user_items = [x.strip() for x in user_items.split(",")]
+
+print("New Transaction:", user_items)
+
+# Visualization
+plt.bar(
+    range(len(frequent_items)),
+    frequent_items['support']
+)
+
+plt.xlabel("Frequent Itemsets")
+plt.ylabel("Support")
+plt.title("Apriori - Support of Frequent Itemsets")
+plt.show()
+
+
+
+
+
+
+K-Nearest 
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.neighbors import KNeighborsClassifier
+
+# Age, Salary
+X = np.array([
+    [20, 20000],
+    [22, 22000],
+    [25, 25000],
+    [28, 30000],
+    [35, 50000],
+    [40, 60000],
+    [45, 65000],
+    [50, 70000]
+])
+
+# 0 = No, 1 = Yes
+y = np.array([0, 0, 0, 0, 1, 1, 1, 1])
+
+# Model
+model = KNeighborsClassifier(n_neighbors=3)
+model.fit(X, y)
+
+# User input
+age = float(input("Enter age: "))
+salary = float(input("Enter salary: "))
+
+prediction = model.predict([[age, salary]])
+
+if prediction[0] == 1:
+    print("Prediction: Customer will buy")
+else:
+    print("Prediction: Customer will not buy")
+
+# Visualization
+plt.scatter(X[:, 0], X[:, 1], c=y)
+plt.scatter(age, salary, marker='*', s=200)
+
+plt.xlabel("Age")
+plt.ylabel("Salary")
+plt.title("KNN Classification")
+plt.show()
+
+
+
+
+
+
+Linear Regression
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+# Experience
+X = np.array([[1], [2], [3], [4], [5], [6], [7]])
+
+# Salary
+y = np.array([20000, 25000, 30000, 35000, 40000, 45000, 50000])
+
+# Model
+model = LinearRegression()
+model.fit(X, y)
+
+# User input
+experience = float(input("Enter years of experience: "))
+
+prediction = model.predict([[experience]])
+
+print("Predicted Salary:", prediction[0])
+
+# Visualization
+plt.scatter(X, y)
+plt.plot(X, model.predict(X))
+
+plt.xlabel("Years of Experience")
+plt.ylabel("Salary")
+plt.title("Linear Regression")
+plt.show()
+
+Data Visulaization
+import matplotlib.pyplot as plt
+
+students = ["A", "B", "C", "D", "E"]
+marks = [70, 80, 65, 90, 75]
+
+# User input
+name = input("Enter new student name: ")
+mark = int(input("Enter marks: "))
+
+students.append(name)
+marks.append(mark)
+
+# Bar graph
+plt.bar(students, marks)
+
+plt.xlabel("Students")
+plt.ylabel("Marks")
+plt.title("Student Marks")
+plt.show()
+
+
+
+
+
+
+
+
+# Display data
+print("\nStudent Data:")
+for i in range(len(students)):
+    print(students[i], "-", marks[i])
+
+Naïve Bayes
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.naive_bayes import GaussianNB
+
+# Links, Words
+X = np.array([
+    [1, 50],
+    [2, 60],
+    [1, 45],
+    [2, 55],
+    [8, 100],
+    [10, 120],
+    [9, 110],
+    [12, 130]
+])
+
+# 0 = Not Spam, 1 = Spam
+y = np.array([0, 0, 0, 0, 1, 1, 1, 1])
+
+# Model
+model = GaussianNB()
+model.fit(X, y)
+
+# User input
+links = int(input("Enter number of links: "))
+words = int(input("Enter number of words: "))
+
+prediction = model.predict([[links, words]])
+
+if prediction[0] == 1:
+    print("Prediction: Spam")
+else:
+    print("Prediction: Not Spam")
+
+# Visualization
+plt.scatter(X[:, 0], X[:, 1], c=y)
+plt.scatter(links, words, marker='*', s=200)
+
+plt.xlabel("Number of Links")
+plt.ylabel("Number of Words")
+plt.title("Naive Bayes Classification")
+plt.show()
+
+
+
+
+
+
+
+
+Decision tree
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.tree import DecisionTreeClassifier
+
+# Temperature, Humidity
+X = np.array([
+    [20, 80],
+    [22, 85],
+    [25, 70],
+    [27, 65],
+    [30, 60],
+    [32, 55],
+    [35, 50],
+    [38, 45]
+])
+
+# 0 = No, 1 = Yes
+y = np.array([0, 0, 1, 1, 1, 1, 0, 0])
+
+# Model
+model = DecisionTreeClassifier()
+model.fit(X, y)
+
+# User input
+temperature = float(input("Enter temperature: "))
+humidity = float(input("Enter humidity: "))
+
+prediction = model.predict([[temperature, humidity]])
+
+if prediction[0] == 1:
+    print("Prediction: Play")
+else:
+    print("Prediction: Do Not Play")
+
+# Visualization
+plt.scatter(X[:, 0], X[:, 1], c=y)
+plt.scatter(temperature, humidity, marker='*', s=200)
+
+plt.xlabel("Temperature")
+plt.ylabel("Humidity")
+plt.title("Decision Tree Classification")
+plt.show()
+
+
+
+
+
+
+
+Random Froest
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.ensemble import RandomForestClassifier
+
+# Study Hours, Attendance
+X = np.array([
+    [1, 50],
+    [2, 55],
+    [3, 60],
+    [4, 65],
+    [5, 70],
+    [6, 75],
+    [7, 80],
+    [8, 90]
+])
+
+# 0 = Fail, 1 = Pass
+y = np.array([0, 0, 0, 1, 1, 1, 1, 1])
+
+# Model
+model = RandomForestClassifier(n_estimators=10, random_state=42)
+model.fit(X, y)
+
+# User input
+hours = float(input("Enter study hours: "))
+attendance = float(input("Enter attendance percentage: "))
+
+prediction = model.predict([[hours, attendance]])
+
+if prediction[0] == 1:
+    print("Prediction: Student will Pass")
+else:
+    print("Prediction: Student will Fail")
+
+# Visualization
+plt.scatter(X[:, 0], X[:, 1], c=y)
+plt.scatter(hours, attendance, marker='*', s=200)
+
+plt.xlabel("Study Hours")
+plt.ylabel("Attendance")
+plt.title("Random Forest Classification")
+plt.show()
+
+
+
+
+
+
+Multi linear Regression
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+# House Size, Bedrooms
+X = np.array([
+    [500, 1],
+    [700, 2],
+    [900, 2],
+    [1100, 3],
+    [1300, 3],
+    [1500, 4],
+    [1800, 4],
+    [2000, 5]
+])
+
+# Price
+y = np.array([
+    20, 30, 40, 50, 60, 70, 85, 100
+])
+
+# Model
+model = LinearRegression()
+model.fit(X, y)
+
+# User input
+size = float(input("Enter house size: "))
+bedrooms = int(input("Enter number of bedrooms: "))
+
+prediction = model.predict([[size, bedrooms]])
+
+print("Predicted House Price:", prediction[0], "Lakhs")
+
+# Visualization
+plt.scatter(X[:, 0], y)
+plt.scatter(size, prediction[0], marker='*', s=200)
+
+plt.xlabel("House Size")
+plt.ylabel("Price (Lakhs)")
+plt.title("Multiple Linear Regression")
+plt.show()
+
+
+
