@@ -3,7 +3,7 @@ from itertools import combinations
 import matplotlib.pyplot as plt
 
 n=int(input("No. of transactions: "))
-T=[set(input(f{i+1}: ").split()) for i in range(n)]
+T=[set(input(f"{i+1}: ").split()) for i in range(n)]
 S=float(input("Min support: "))
 C=float(input("Min confidence: "))
 
@@ -41,6 +41,8 @@ plt.xlabel("Itemsets")
 plt.ylabel("Support")
 plt.title("Frequent Itemsets")
 plt.show()
+
+
 
 
 
