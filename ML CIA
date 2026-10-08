@@ -1,0 +1,388 @@
+1)Implementation of Apriori algorithm
+from itertools import combinations
+import matplotlib.pyplot as plt
+
+n=int(input("No. of transactions: "))
+T=[set(input(f{i+1}: ").split()) for i in range(n)]
+S=float(input("Min support: "))
+C=float(input("Min confidence: "))
+
+sup=lambda x:sum(x<=t for t in T)/n
+items=set().union(*T); freq=[]
+
+for k in range(1,len(items)+1):
+    f={frozenset(x) for x in combinations(items,k) if sup(set(x))>=S}
+    if not f: break
+    freq+=f
+
+print("\nFrequent Itemsets:")
+data=[]
+for x in freq:
+    v=sup(set(x))
+    print(set(x),round(v,2))
+    data.append((str(set(x)),v))
+
+print("\nAssociation Rules:")
+for x in freq:
+    for r in range(1,len(x)):
+        for a in combinations(x,r):
+            a,b=set(a),set(x)-set(a)
+            c=sup(a|b)/sup(a)
+            if c>=C: print(a,"->",b,round(c,2))
+
+u=set(input("\nEnter unseen transaction: ").split())
+print("\nPrediction:")
+for x in freq:
+    if x<=u: print(set(x))
+
+# Simple Graph
+plt.bar(range(len(data)),[v for _,v in data])
+plt.xlabel("Itemsets")
+plt.ylabel("Support")
+plt.title("Frequent Itemsets")
+plt.show()
+
+
+
+
+
+2)Implementation of Classification mode K-nearest neighbour
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
+
+x=[[1,2],[2,3],[3,4],[6,7],[7,8],[8,9]]
+y=['Red','Red','Red','Blue','Blue','Blue']
+
+xtr,xte,ytr,yte=train_test_split(x,y,test_size=.33,random_state=42)
+
+m=KNeighborsClassifier(n_neighbors=3)
+m.fit(xtr,ytr)
+p=m.predict(xte)
+
+print("Actual:",yte)
+print("Predicted:",p)
+print("Accuracy:",accuracy_score(yte,p))
+
+a=float(input("Enter x1: "))
+b=float(input("Enter x2: "))
+print("New Prediction:",m.predict([[a,b]])[0])
+
+for c,col in [('Red','red'),('Blue','blue')]:
+    q=[x[i] for i in range(len(x)) if y[i]==c]
+    plt.scatter([z[0] for z in q],[z[1] for z in q],
+                color=col,label=c)
+
+plt.scatter(a,b,color='black',marker='*',s=150,label='New')
+plt.xlabel("x1")
+plt.ylabel("x2")
+plt.title("KNN Classification")
+plt.legend()
+plt.grid()
+plt.show()
+
+
+
+
+
+
+3)Implementation of linear regression model.
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+import matplotlib.pyplot as plt
+
+x=[[1],[2],[3],[4],[5],[6],[7],[8],[9],[10]]
+y=[10,20,30,40,50,60,70,80,90,100]
+
+xtr,xte,ytr,yte=train_test_split(x,y,test_size=.2,random_state=42)
+
+m=LinearRegression()
+m.fit(xtr,ytr)
+p=m.predict(xte)
+
+print("Actual:",yte)
+print("Predicted:",p)
+print("MSE:",mean_squared_error(yte,p))
+print("R2 Score:",r2_score(yte,p))
+
+a=float(input("Enter new x: "))
+print("New Prediction:",m.predict([[a]])[0])
+
+plt.scatter(x,y,label="Data")
+plt.plot(x,m.predict(x),label="Regression Line")
+plt.scatter(a,m.predict([[a]]),marker="*",s=150,label="New")
+plt.xlabel("x")
+plt.ylabel("y")
+plt.title("Linear Regression")
+plt.legend()
+plt.grid()
+plt.show()
+
+
+
+
+4)Demonstrate Data visualization.
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+file = input("Enter CSV file name: ")
+df = pd.read_csv(file)
+
+print("\nData Loaded Successfully!")
+print(df.head())
+
+print("\n--- DATA VISUALIZATION MENU ---")
+print("1. Histogram")
+print("2. Bar Chart")
+print("3. Line Chart")
+print("4. Scatter Plot")
+print("5. Box Plot")
+print("6. Pie Chart")
+print("7. Heatmap")
+print("8. Exit")
+
+while True:
+    choice = int(input("\nEnter your choice: "))
+
+    if choice == 1:
+        sns.histplot(df["Marks"], kde=True)
+        plt.title("Marks Distribution")
+        plt.show()
+
+    elif choice == 2:
+        sns.barplot(x="Name", y="Marks", data=df)
+        plt.title("Marks by Student")
+        plt.xticks(rotation=45)
+        plt.show()
+
+    elif choice == 3:
+        plt.plot(df["Name"], df["Marks"], marker="o")
+        plt.title("Marks Trend")
+        plt.xticks(rotation=45)
+        plt.show()
+
+    elif choice == 4:
+        sns.scatterplot(x="StudyHours", y="Marks", data=df)
+        plt.title("Study Hours vs Marks")
+        plt.show()
+
+    elif choice == 5:
+        sns.boxplot(y=df["Marks"])
+        plt.title("Marks Box Plot")
+        plt.show()
+
+    elif choice == 6:
+        df["Gender"].value_counts().plot.pie(autopct="%1.1f%%")
+        plt.title("Gender Distribution")
+        plt.ylabel("")
+        plt.show()
+
+    elif choice == 7:
+        sns.heatmap(df.select_dtypes("number").corr(), annot=True)
+        plt.title("Correlation Heatmap")
+        plt.show()
+
+    elif choice == 8:
+        print("Program Ended")
+        break
+
+    else:
+        print("Invalid Choice")
+
+
+
+
+Data Loaded Successfully!
+    Name  Age  Marks  Attendance  StudyHours  Gender
+0   John   20     85          90           5    Male
+1   Sara   21     92          95           7  Female
+2   Mike   20     70          80           3    Male
+3   Anna   22     88          92           6  Female
+4  David   21     65          75           2    Male
+
+
+
+
+
+
+
+5)Implementation of classification models-Naïve bayes clasiifier
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
+
+x=[[90,85],[85,80],[95,90],[60,55],
+   [65,60],[70,65],[88,82],[55,50]]
+
+y=['Pass','Pass','Pass','Fail','Fail','Fail','Pass','Fail']
+
+xtr,xte,ytr,yte=train_test_split(
+    x,y,test_size=.25,random_state=42)
+
+m=GaussianNB()
+m.fit(xtr,ytr)
+p=m.predict(xte)
+
+print("Actual:",yte)
+print("Predicted:",p)
+print("Accuracy:",accuracy_score(yte,p))
+
+# New / unseen student
+a=float(input("Enter attendance: "))
+b=float(input("Enter marks: "))
+print("New Student:",m.predict([[a,b]])[0])
+
+# Graph
+for c,col in [('Pass','green'),('Fail','red')]:
+    q=[x[i] for i in range(len(x)) if y[i]==c]
+    plt.scatter([z[0] for z in q],[z[1] for z in q],
+                color=col,label=c)
+
+plt.scatter(a,b,color='blue',marker='*',s=150,label='New')
+plt.xlabel("Attendance")
+plt.ylabel("Marks")
+plt.title("Naive Bayes Classification")
+plt.legend()
+plt.grid()
+plt.show()
+
+
+
+
+
+
+6) Implementation of classification models-Decision trees
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
+
+x=[[90,85],[85,80],[95,90],[60,55],
+   [65,60],[70,65],[88,82],[55,50]]
+
+y=['Pass','Pass','Pass','Fail','Fail','Fail','Pass','Fail']
+
+xtr,xte,ytr,yte=train_test_split(
+    x,y,test_size=.25,random_state=42)
+
+m=DecisionTreeClassifier(random_state=42)
+m.fit(xtr,ytr)
+p=m.predict(xte)
+
+print("Actual:",yte)
+print("Predicted:",p)
+print("Accuracy:",accuracy_score(yte,p))
+
+# New / unseen student
+a=float(input("Enter attendance: "))
+b=float(input("Enter marks: "))
+print("New Student:",m.predict([[a,b]])[0])
+
+# Graph
+for c,col in [('Pass','green'),('Fail','red')]:
+    q=[x[i] for i in range(len(x)) if y[i]==c]
+    plt.scatter([z[0] for z in q],[z[1] for z in q],
+                color=col,label=c)
+
+plt.scatter(a,b,color='blue',marker='*',s=150,label='New')
+plt.xlabel("Attendance")
+plt.ylabel("Marks")
+plt.title("Decision Tree Classification")
+plt.legend()
+plt.grid()
+plt.show()
+
+
+
+
+
+
+
+7 ) Implementation of classification models-Random forest
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
+
+x=[[90,85],[85,80],[95,90],[60,55],
+   [65,60],[70,65],[88,82],[55,50]]
+
+y=['Pass','Pass','Pass','Fail','Fail','Fail','Pass','Fail']
+
+xtr,xte,ytr,yte=train_test_split(
+    x,y,test_size=.25,random_state=42)
+
+m=RandomForestClassifier(n_estimators=10,random_state=42)
+m.fit(xtr,ytr)
+p=m.predict(xte)
+
+print("Actual:",yte)
+print("Predicted:",p)
+print("Accuracy:",accuracy_score(yte,p))
+
+# New / unseen student
+a=float(input("Enter attendance: "))
+b=float(input("Enter marks: "))
+print("New Student:",m.predict([[a,b]])[0])
+
+# Graph
+for c,col in [('Pass','green'),('Fail','red')]:
+    q=[x[i] for i in range(len(x)) if y[i]==c]
+    plt.scatter([z[0] for z in q],[z[1] for z in q],
+                color=col,label=c)
+
+plt.scatter(a,b,color='blue',marker='*',s=150,label='New')
+plt.xlabel("Attendance")
+plt.ylabel("Marks")
+plt.title("Random Forest Classification")
+plt.legend()
+plt.grid()
+plt.show()
+
+
+
+
+
+8)Implementation of Regression models-Multiple
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
+import matplotlib.pyplot as plt
+
+x=[[1000,2,10],[1200,2,8],[1500,3,7],[1800,3,5],
+   [2000,4,4],[2200,4,3],[2500,4,2],[2800,5,1]]
+
+y=[40,48,60,72,82,90,105,120]
+
+xtr,xte,ytr,yte=train_test_split(
+    x,y,test_size=.25,random_state=42)
+
+m=LinearRegression()
+m.fit(xtr,ytr)
+p=m.predict(xte)
+
+print("Actual:",yte)
+print("Predicted:",p)
+print("R2 Score:",r2_score(yte,p))
+
+# New / unseen house
+a=float(input("Enter area: "))
+b=float(input("Enter bedrooms: "))
+c=float(input("Enter age: "))
+
+print("Predicted Price:",m.predict([[a,b,c]])[0],"Lakhs")
+
+# Graph
+plt.scatter(yte,p)
+plt.plot([min(yte),max(yte)],[min(yte),max(yte)])
+plt.xlabel("Actual Price")
+plt.ylabel("Predicted Price")
+plt.title("House Price Prediction")
+plt.grid()
+plt.show()
+
+
