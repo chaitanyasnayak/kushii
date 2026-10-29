@@ -1,163 +1,51 @@
 prog1
 
-html
+```html
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vagabond India Tours</title>
-
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-}
-
-body {
-    background: #39929c;
-    padding: 30px;
-}
-
-header {
-    text-align: center;
-    color: white;
-    margin-bottom: 30px;
-}
-
-.container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.card {
-    width: 300px;
-    background: white;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
-
-img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 6px;
-}
-
-h3 {
-    margin: 10px 0;
-    color: #1e293b;
-}
-
-p, li {
-    color: #64748b;
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-ul {
-    border-top: 1px solid #ddd;
-    padding: 10px 0;
-    list-style: none;
-}
-
-.flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.price {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-small {
-    display: block;
-    font-size: 12px;
-    font-weight: normal;
-}
-
-button {
-    background: #0f172a;
-    color: white;
-    padding: 8px 15px;
-    border: 0;
-    cursor: pointer;
-    border-radius: 4px;
-}
+body{font-family:Arial;background:#39929c;padding:30px}
+header{text-align:center;color:white;margin-bottom:30px}
+.card{width:300px;margin:auto;background:white;padding:15px;border-radius:8px}
+img{width:100%;height:150px;object-fit:cover;border-radius:6px}
+h3{color:#1e293b}
+p,li{color:#64748b;font-size:14px;margin:10px 0}
+ul{border-top:1px solid #ddd;padding:10px;list-style:none}
+.flex{display:flex;justify-content:space-between;align-items:center}
+.price{font-size:20px;font-weight:bold}
+small{display:block;font-size:12px;font-weight:normal}
+button{background:#0f172a;color:white;padding:8px 15px;border:0;cursor:pointer}
 </style>
 </head>
-
 <body>
 
 <header>
-    <h1>Vagabond India Tours</h1>
-    <p>Handcrafted journeys for modern explorers</p>
+<h1>Vagabond India Tours</h1>
+<p>Handcrafted journeys for modern explorers</p>
 </header>
 
-<div class="container">
+<div class="card">
+<img src="https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=500" alt="Kashmir">
 
-    <!-- Kashmir Package -->
-    <div class="card">
-        <img src="https://images.unsplash.com/photo-1595815771614-ade9d652a65d?w=500"
-             alt="Kashmir">
+<h3>Kashmir Paradise</h3>
+<p>Explore valleys, snow peaks and Dal Lake.</p>
 
-        <h3>Kashmir Paradise</h3>
-        <p>Explore valleys, snow peaks and Dal Lake.</p>
+<ul>
+<li>✓ 5 Nights Hotel Stay</li>
+<li>✓ Shikara Ride</li>
+<li>✓ Private AC Vehicle</li>
+</ul>
 
-        <ul>
-            <li>✓ 5 Nights Hotel Stay</li>
-            <li>✓ Shikara Ride</li>
-            <li>✓ Private AC Vehicle</li>
-        </ul>
-
-        <div class="flex">
-            <div class="price">
-                ₹24,999
-                <small>per person</small>
-            </div>
-            <button onclick="alert('Kashmir package selected!')">
-                Book
-            </button>
-        </div>
-    </div>
-
-    <!-- Kerala Package -->
-    <div class="card">
-        <img src="https://images.unsplash.com/photo-1593693397690-362cb9666fc2?w=500"
-             alt="Kerala">
-
-        <h3>Kerala Backwaters</h3>
-        <p>Enjoy houseboats and beautiful tea gardens.</p>
-
-        <ul>
-            <li>✓ 4 Nights Resort Stay</li>
-            <li>✓ Houseboat Cruise</li>
-            <li>✓ Daily Breakfast</li>
-        </ul>
-
-        <div class="flex">
-            <div class="price">
-                ₹18,500
-                <small>per person</small>
-            </div>
-            <button onclick="alert('Kerala package selected!')">
-                Book
-            </button>
-        </div>
-    </div>
-
+<div class="flex">
+<div class="price">₹24,999<small>per person</small></div>
+<button onclick="alert('Kashmir package selected!')">Book</button>
+</div>
 </div>
 
 </body>
 </html>
-
 
 
 
