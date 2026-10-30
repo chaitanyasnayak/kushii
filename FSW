@@ -317,36 +317,50 @@ document.getElementById("op").innerHTML=s;
 
 
 prog5
-```html
 <!DOCTYPE html>
 <html>
 <head>
-<title>jQuery</title>
+<title>Online Shopping</title>
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<style>
+body{font-family:Arial;background:#eaf4ff;text-align:center;padding:30px}
+.box{background:white;max-width:400px;margin:auto;padding:25px;border:2px solid blue;border-radius:12px}
+button{padding:10px;margin:8px;background:blue;color:white;border:0;border-radius:5px}
+#details{background:#f0f8ff;padding:12px}
+</style>
 </head>
 <body>
+<div class="box">
+<h2>Online Shopping Store</h2>
+<div style="font-size:60px"></div>
+<h3>Wireless Headphones</h3>
+<p><b>Price:</b> ₹999</p>
 
-<h2 id="text">Hello MCA Students</h2>
-<button id="hide">Hide</button>
-<button id="show">Show</button>
-<button id="fade">Fade Toggle</button>
+<button id="show">View Details</button>
+<button id="hide">Hide Details</button>
 
-<div id="box" style="width:150px;height:100px;background:lightblue;margin:20px"></div>
+<div id="details" style="display:none">
+<h3>Product Details</h3>
+<p>Bluetooth: Version 5.3</p>
+<p>Battery Life: 20 Hours</p>
+<p>Warranty: 1 Year</p>
+<p>Delivery: Free</p>
+</div>
+</div>
 
 <script>
-$("#hide").click(function(){
-    $("#text").hide();
-});
-$("#show").click(function(){
-    $("#text").show();
-});
-$("#fade").click(function(){
-    $("#box").fadeToggle();
+$(document).ready(function(){
+    $("#show").click(function(){
+        $("#details").show();
+    });
+    $("#hide").click(function(){
+        $("#details").hide();
+    });
 });
 </script>
-
 </body>
 </html>
+
 
 
 
