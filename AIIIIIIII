@@ -1,0 +1,146 @@
+from queue import PriorityQueue
+
+g = {'A':[('B',2),('C',5)], 'B':[('D',1),('E',4)],
+    'C':[('F',2)], 'D':[('G',3)], 'E':[('G',1)],
+    'F':[('G',2)], 'G':[]}
+
+q = PriorityQueue()
+q.put((0,'A'))
+v, path, total = set(), [], 0
+
+while not q.empty():
+   c, n = q.get()
+   if n in v: continue
+
+   print("Visiting:", n, "(Cost:", c, ")")
+   v.add(n)
+   path.append(n)
+   total += c
+
+   if n == 'G':
+       print("Goal Node Reached!")
+       break
+
+   for x, w in g[n]:
+       if x not in v:
+           print("Adding neighbour:", x, "(Weight:", w, ")")
+           q.put((w,x))
+
+print("Path:", " → ".join(path))
+print("Total Cost:", total)
+
+
+
+
+2. MinMax Algorithm
+v = [3,5,2,9,12,5,23,23]
+
+def minimax(d, i, m):
+   if d == 3:
+       return v[i]
+
+   a = minimax(d+1, i*2, not m)
+   b = minimax(d+1, i*2+1, not m)
+
+   return max(a,b) if m else min(a,b)
+
+print("Leaf values:", v)
+print("Best value according to Minimax:", minimax(0,0,True))
+
+
+
+
+
+3. Cryptarithmetic Problem
+from itertools import permutations
+
+a = input("Enter first word: ").upper()
+b = input("Enter second word: ").upper()
+c = input("Enter result word: ").upper()
+
+l = set(a+b+c)
+
+if len(l) > 10:
+   print("Too many letters! Maximum is 10.")
+else:
+   for d in permutations(range(10), len(l)):
+       m = dict(zip(l,d))
+
+       if m[a[0]] == 0 or m[b[0]] == 0 or m[c[0]] == 0:
+           continue
+
+       x = int(''.join(str(m[i]) for i in a))
+       y = int(''.join(str(m[i]) for i in b))
+       z = int(''.join(str(m[i]) for i in c))
+
+       if x+y == z:
+           print("Solution found:")
+           print(m)
+           print(x, "+", y, "=", z)
+           break
+   else:
+       print("No solution found")
+
+
+
+
+
+4. Chatbot
+from datetime import datetime
+
+r = {"hello":"Hello!", "hi":"Hi!",
+    "how are you":"I'm fine!", "name":"I'm an AI Chatbot.",
+    "ai":"AI means Artificial Intelligence.",
+    "python":"Python is a programming language.",
+    "java":"Java is an object-oriented language.",
+    "study":"Study regularly!", "joke":"Windows was open!"}
+
+print("AI CHATBOT\nType 'bye' to exit.")
+
+while True:
+   u = input("You: ").lower()
+
+   if u == "bye":
+       print("Chatbot: Goodbye!")
+       break
+   elif "time" in u:
+       print(datetime.now().strftime("%I:%M %p"))
+   elif "date" in u or "today" in u:
+       print(datetime.now().strftime("%d-%m-%Y"))
+   else:
+       for k in r:
+           if k in u:
+               print("Chatbot:", r[k])
+               break
+       else:
+           print("Chatbot: Sorry, I don't understand.")
+
+
+
+5. Water Jug Problem
+from collections import deque
+
+def bfs(a,b,t):
+   q = deque([(0,0)])
+   v = set()
+
+   while q:
+       x,y = q.popleft()
+       if (x,y) in v: continue
+       v.add((x,y))
+
+       print("Visited state: X =",x,"L, Y =",y,"L")
+
+       if x == t or y == t:
+           print("Goal reached!")
+           return
+
+       p = min(x,b-y)
+       r = min(y,a-x)
+
+       q.extend([(a,y),(x,b),(0,y),(x,0),
+                 (x-p,y+p),(x+r,y-r)])
+
+   print("No solution found.")
+
+bfs(4,3,2)
