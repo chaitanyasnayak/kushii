@@ -144,3 +144,51 @@ def bfs(a,b,t):
    print("No solution found.")
 
 bfs(4,3,2)
+
+
+
+
+
+
+print("Welcome to Clothes Store Chatbot!")
+print("Type 'bye' to exit.")
+
+while True:
+    user = input("You: ").lower()
+
+    if user == "bye":
+        print("Bot: Thank you for visiting! Have a nice day.")
+        break
+
+    elif "shirt" in user:
+        print("Bot: We have Casual, Formal and T-shirts.")
+
+    elif "jeans" in user:
+        print("Bot: We have Slim Fit, Regular Fit and Baggy Jeans.")
+
+    elif "dress" in user:
+        print("Bot: We have Casual, Party Wear and Ethnic Dresses.")
+
+    elif "size" in user:
+        print("Bot: Available sizes are S, M, L, XL and XXL.")
+
+    elif "price" in user:
+        print("Bot: Prices start from ₹499.")
+
+    elif "color" in user:
+        print("Bot: Available colors are Black, White, Blue, Red and Pink.")
+
+    elif "offer" in user or "discount" in user:
+        print("Bot: Get 20% OFF on orders above ₹2000.")
+
+    elif "delivery" in user:
+        print("Bot: Delivery takes 3-5 business days.")
+
+    elif "return" in user:
+        print("Bot: Returns are accepted within 7 days.")
+
+    elif "help" in user:
+        print("Bot: Ask about shirts, jeans, dresses, sizes, prices, colors, offers, delivery or returns.")
+
+    else:
+        print("Bot: Sorry, I didn't understand. Type 'help' for available options.")
