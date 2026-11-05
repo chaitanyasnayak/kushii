@@ -1,0 +1,354 @@
+CREATE DATABASE MobileRechargeDB;
+GO
+USE MobileRechargeDB;
+GO
+
+CREATE TABLE Customers (
+    Customer_ID INT PRIMARY KEY,
+    Customer_Name VARCHAR(50),
+    Mobile_Number VARCHAR(15) UNIQUE,
+    Email VARCHAR(50),
+    City VARCHAR(30)
+);
+
+CREATE TABLE Operators (
+    Operator_ID INT PRIMARY KEY,
+    Operator_Name VARCHAR(30)
+);
+
+CREATE TABLE Recharge_Plans (
+    Plan_ID INT PRIMARY KEY,
+    Operator_ID INT,
+    Amount DECIMAL(10,2) CHECK (Amount >= 0),
+    Validity INT,
+    Data_Limit VARCHAR(20),
+    FOREIGN KEY (Operator_ID) REFERENCES Operators(Operator_ID)
+);
+
+CREATE TABLE Recharges (
+    Recharge_ID INT PRIMARY KEY,
+    Customer_ID INT,
+    Plan_ID INT,
+    Recharge_Date DATE,
+    Status VARCHAR(20),
+    FOREIGN KEY (Customer_ID) REFERENCES Customers(Customer_ID),
+    FOREIGN KEY (Plan_ID) REFERENCES Recharge_Plans(Plan_ID)
+);
+GO
+
+INSERT INTO Customers VALUES
+(101,'Ravi','9876543210','ravi@gmail.com','Bangalore'),
+(102,'Kiran','9876543211','kiran@gmail.com','Mysore'),
+(103,'Arun','9876543212','arun@gmail.com','Chennai'),
+(104,'Rahul','9876543213','rahul@gmail.com','Bangalore');
+
+INSERT INTO Operators VALUES
+(1,'Jio'), (2,'Airtel'), (3,'Vi'), (4,'BSNL');
+
+INSERT INTO Recharge_Plans VALUES
+(501,1,299,28,'1.5 GB/Day'),
+(502,2,399,56,'2 GB/Day'),
+(503,3,199,28,'1 GB/Day'),
+(504,4,149,24,'Unlimited');
+
+INSERT INTO Recharges VALUES
+(1,101,501,'2026-10-01','Success'),
+(2,102,502,'2026-10-02','Success'),
+(3,103,503,'2026-10-03','Pending'),
+(4,104,504,'2026-10-04','Success');
+GO
+
+
+
+1a
+-- DDL: CREATE
+CREATE TABLE Payments (
+    Payment_ID INT PRIMARY KEY,
+    Amount DECIMAL(10,2),
+    Payment_Mode VARCHAR(20)
+);
+
+-- DDL: ALTER
+ALTER TABLE Payments ADD Payment_Status VARCHAR(20);
+
+-- DML: INSERT
+INSERT INTO Payments
+VALUES (1,299,'UPI','Success');
+
+-- DML: SELECT
+SELECT * FROM Payments;
+
+-- DML: UPDATE
+UPDATE Payments
+SET Amount = 399
+WHERE Payment_ID = 1;
+
+-- DML: DELETE
+DELETE FROM Payments
+WHERE Payment_ID = 1;
+
+
+
+
+CREATE LOGIN recharge_user
+WITH PASSWORD = 'Recharge@123';
+
+CREATE USER recharge_user FOR LOGIN recharge_user;
+
+GRANT SELECT ON dbo.Customers TO recharge_user;
+REVOKE SELECT ON dbo.Customers FROM recharge_user;
+DENY DELETE ON dbo.Customers TO recharge_user;
+
+-- TCL: Transaction example
+BEGIN TRANSACTION;
+
+INSERT INTO Customers
+VALUES (106,'Suresh','9876543215','suresh@gmail.com','Delhi');
+
+SAVE TRANSACTION S1;
+
+UPDATE Customers
+SET City = 'Pune'
+WHERE Customer_ID = 106;
+
+ROLLBACK TRANSACTION S1;
+
+COMMIT TRANSACTION;
+
+SELECT Customer_ID, Customer_Name, City
+FROM Customers WHERE Customer_ID = 106;
+
+
+
+
+1b
+CREATE TABLE Recharge_Test (
+    Recharge_ID INT PRIMARY KEY,
+    Mobile_Number VARCHAR(15) UNIQUE,
+    Amount DECIMAL(10,2) CHECK (Amount >= 10),
+    Customer_ID INT,
+    FOREIGN KEY (Customer_ID) REFERENCES Customers(Customer_ID)
+);
+
+INSERT INTO Recharge_Test
+VALUES (1,'9999999999',299,101);
+
+SELECT * FROM Recharge_Test;
+
+SELECT CAST('2026-10-01' AS DATE) AS Recharge_Date;
+SELECT DATEADD(DAY,7,'2026-10-01') AS Next_Week;
+SELECT DATEDIFF(DAY,'2026-10-01','2026-10-10') AS Total_Days;
+
+SELECT CAST('14:30:00' AS TIME) AS Recharge_Time;
+SELECT CAST(GETDATE() AS TIME) AS Current_Time;
+
+SELECT ABS(-299) AS Absolute_Value;
+SELECT ROUND(299.567,2) AS Rounded_Value;
+SELECT CEILING(299.25) AS Ceiling_Value;
+SELECT FLOOR(299.75) AS Floor_Value;
+
+SELECT UPPER('jio') AS Uppercase;
+SELECT LOWER('AIRTEL') AS Lowercase;
+SELECT LEN('Recharge') AS Length;
+SELECT CONCAT('Mobile',' Recharge') AS Full_Name;
+SELECT SUBSTRING('Recharge',1,4) AS Result;
+
+SELECT CAST(299 AS VARCHAR(10)) AS Converted_Value;
+SELECT CONVERT(VARCHAR(10),CAST('2026-10-01' AS DATE),103) AS Date_Format;
+SELECT TRY_CONVERT(INT,'500') AS Number_Value;
+
+
+
+
+1c
+SELECT C.Customer_Name, P.Amount
+FROM Customers C
+INNER JOIN Recharges R ON C.Customer_ID = R.Customer_ID
+INNER JOIN Recharge_Plans P ON R.Plan_ID = P.Plan_ID;
+
+SELECT C.Customer_Name, R.Recharge_ID
+FROM Customers C
+LEFT JOIN Recharges R ON C.Customer_ID = R.Customer_ID;
+
+SELECT C.Customer_Name, R.Recharge_ID
+FROM Customers C
+RIGHT JOIN Recharges R ON C.Customer_ID = R.Customer_ID;
+
+SELECT C.Customer_Name, R.Recharge_ID
+FROM Customers C
+FULL OUTER JOIN Recharges R ON C.Customer_ID = R.Customer_ID;
+
+
+
+
+2
+-- Customers who have made a recharge
+SELECT Customer_Name
+FROM Customers
+WHERE Customer_ID IN
+    (SELECT Customer_ID FROM Recharges);
+
+-- Plans whose amount is above the average
+SELECT Plan_ID, Amount
+FROM Recharge_Plans
+WHERE Amount > (SELECT AVG(Amount) FROM Recharge_Plans);
+
+
+SELECT C.Customer_Name
+FROM Customers C
+WHERE EXISTS (
+    SELECT 1
+    FROM Recharges R
+    WHERE R.Customer_ID = C.Customer_ID
+      AND R.Status = 'Success'
+);
+
+CREATE VIEW Successful_Recharges AS
+SELECT Recharge_ID, Customer_ID, Plan_ID, Recharge_Date, Status
+FROM Recharges
+WHERE Status = 'Success';
+
+SELECT * FROM Successful_Recharges;
+
+CREATE SYNONYM Customer_Details FOR dbo.Customers;
+SELECT * FROM Customer_Details;
+
+
+CREATE SEQUENCE Recharge_Sequence
+START WITH 5
+INCREMENT BY 1;
+SELECT NEXT VALUE FOR Recharge_Sequence AS Recharge_ID;
+
+
+CREATE INDEX idx_customer_name
+ON Customers(Customer_Name);
+SELECT * FROM Customers
+WHERE Customer_Name = 'Ravi';
+
+
+2.1
+CREATE PROCEDURE OddNumbers
+    @N INT
+AS
+BEGIN
+    DECLARE @i INT = 1;
+
+    WHILE @i <= @N
+    BEGIN
+        IF @i % 2 = 1
+            PRINT @i;
+
+        SET @i = @i + 1;
+    END;
+END;
+
+-- User input
+EXEC OddNumbers @N = 10;
+
+
+2.2
+DECLARE @N INT;
+DECLARE @a INT = 0, @b INT = 1, @c INT;
+DECLARE @i INT = 1;
+
+SET @N = 7;  -- Enter number of terms
+
+WHILE @i <= @N
+BEGIN
+    PRINT @a;
+
+    SET @c = @a + @b;
+    SET @a = @b;
+    SET @b = @c;
+
+    SET @i = @i + 1;
+END;
+
+2.3
+DECLARE @N INT;
+DECLARE @sum INT = 0, @i INT = 1;
+
+SET @N = 10;  -- Enter number
+
+WHILE @i <= @N
+BEGIN
+    SET @sum = @sum + @i;
+    SET @i = @i + 1;
+END;
+
+PRINT 'Sum = ' + CAST(@sum AS VARCHAR(10));
+
+
+2.4
+DECLARE @N INT;
+DECLARE @rev INT = 0, @rem INT;
+
+SET @N = 1234;  -- Enter number
+
+WHILE @N > 0
+BEGIN
+    SET @rem = @N % 10;
+    SET @rev = @rev * 10 + @rem;
+    SET @N = @N / 10;
+END;
+
+PRINT 'Reverse = ' + CAST(@rev AS VARCHAR(10));
+
+
+
+
+
+2b
+BEGIN TRY
+    DECLARE @A INT = 100;
+    DECLARE @B INT = 0;
+    DECLARE @C INT;
+
+    SET @C = @A / @B;
+    PRINT @C;
+END TRY
+BEGIN CATCH
+    PRINT 'Error Occurred!';
+    PRINT ERROR_MESSAGE();
+END CATCH;
+
+BEGIN TRY
+    INSERT INTO Recharge_Plans
+    VALUES (505,1,-100,28,'1 GB/Day');
+END TRY
+BEGIN CATCH
+    PRINT 'Invalid Recharge Details';
+    PRINT ERROR_MESSAGE();
+END CATCH;
+
+
+
+
+
+5
+CREATE TABLE Recharge_JSON (
+    ID INT PRIMARY KEY,
+    Recharge_Details NVARCHAR(MAX)
+);
+
+INSERT INTO Recharge_JSON
+VALUES (1, N'{
+  "Customer":"Ravi",
+  "Operator":"Jio",
+  "Amount":299,
+  "Validity":28
+}');
+
+-- Display JSON
+SELECT * FROM Recharge_JSON;
+
+-- Validate JSON
+SELECT ISJSON(Recharge_Details) AS JSON_Valid
+FROM Recharge_JSON;
+
+-- Extract values
+SELECT
+    JSON_VALUE(Recharge_Details,'$.Customer') AS Customer_Name,
+    JSON_VALUE(Recharge_Details,'$.Operator') AS Operator_Name,
+    JSON_VALUE(Recharge_Details,'$.Amount') AS Recharge_Amount
+FROM Recharge_JSON;
