@@ -1,0 +1,345 @@
+CREATE DATABASE bloodDB;
+GO
+
+USE bloodDB;
+GO
+
+CREATE TABLE Donor
+(
+    DonorID INT PRIMARY KEY,
+    DonorName VARCHAR(50) NOT NULL,
+    Age INT CHECK (Age >= 18),
+    Gender VARCHAR(10),
+    BloodGroup VARCHAR(5),
+    Phone VARCHAR(15) UNIQUE
+);
+
+CREATE TABLE BloodDonation
+(
+    DonationID INT PRIMARY KEY,
+    DonorID INT,
+    DonationDate DATE,
+    BloodGroup VARCHAR(5),
+    Quantity INT CHECK (Quantity > 0),
+
+    FOREIGN KEY (DonorID) REFERENCES Donor(DonorID)
+);
+
+ALTER TABLE Donor
+ADD City VARCHAR(30);
+
+INSERT INTO Donor
+(DonorID, DonorName, Age, Gender, BloodGroup, Phone, City)
+VALUES
+(101, 'Arun Kumar', 25, 'Male', 'O+', '9876543210', 'Bangalore'),
+(102, 'Priya Sharma', 22, 'Female', 'A+', '9876543211', 'Mysore'),
+(103, 'Rahul Singh', 30, 'Male', 'B+', '9876543212', 'Bangalore'),
+(104, 'Sneha Rao', 27, 'Female', 'AB+', '9876543213', 'Tumkur'),
+(105, 'Kiran Kumar', 24, 'Male', 'O-', '9876543214', 'Bangalore'),
+(106, 'Meena Devi', 26, 'Female', 'B+', '9876543215', 'Hubli');
+
+INSERT INTO BloodDonation
+(DonationID, DonorID, DonationDate, BloodGroup, Quantity)
+VALUES
+(201, 101, '2026-09-01', 'O+', 450),
+(202, 102, '2026-09-03', 'A+', 400),
+(203, 103, '2026-09-05', 'B+', 450),
+(204, 104, '2026-09-10', 'AB+', 350),
+(205, 105, '2026-09-15', 'O-', 450),
+(206, 106, '2026-09-20', 'B+', 400);
+
+SELECT * FROM Donor;
+
+SELECT * FROM BloodDonation;
+
+INSERT INTO Donor
+(DonorID, DonorName, Age, Gender, BloodGroup, Phone, City)
+VALUES
+(107, 'Meena Devi', 26, 'Female', 'B+', '9876543216', 'Hubli');
+
+UPDATE Donor
+SET City = 'Bangalore'
+WHERE DonorID = 107;
+
+DELETE FROM Donor
+WHERE DonorID = 107;
+
+CREATE LOGIN BloodUser1
+WITH PASSWORD = 'Blood@12345';
+GO
+
+USE bloodDB;
+GO
+
+CREATE USER BloodUser FOR LOGIN BloodUser;
+
+GRANT SELECT, INSERT
+ON Donor
+TO BloodUser;
+
+REVOKE INSERT
+ON Donor
+FROM BloodUser;
+
+BEGIN TRANSACTION;
+
+UPDATE Donor
+SET City = 'Bangalore'
+WHERE DonorID = 101;
+
+COMMIT;
+
+BEGIN TRANSACTION;
+
+UPDATE Donor
+SET City = 'Mysore'
+WHERE DonorID = 102;
+
+ROLLBACK;
+
+USE bloodDB;
+GO
+
+SELECT GETDATE() AS CurrentDateTime;
+
+SELECT CAST(GETDATE() AS TIME) AS CurrentTime;
+
+SELECT
+    MAX(Quantity) AS MaximumBlood,
+    MIN(Quantity) AS MinimumBlood,
+    AVG(Quantity) AS AverageBlood,
+    SUM(Quantity) AS TotalBlood
+FROM BloodDonation;
+
+SELECT
+    DonorName,
+    UPPER(DonorName) AS UpperName,
+    LOWER(DonorName) AS LowerName,
+    LEN(DonorName) AS NameLength
+FROM Donor;
+
+SELECT
+    DonorID,
+    CAST(Age AS VARCHAR(10)) AS AgeAsText
+FROM Donor;
+
+SELECT
+    D.DonorID,
+    D.DonorName,
+    D.BloodGroup,
+    B.DonationDate,
+    B.Quantity
+FROM Donor D
+INNER JOIN BloodDonation B
+ON D.DonorID = B.DonorID;
+
+
+SELECT
+    D.DonorName,
+    B.DonationDate,
+    B.Quantity
+FROM Donor D
+LEFT JOIN BloodDonation B
+ON D.DonorID = B.DonorID;
+
+SELECT
+    D.DonorName,
+    B.Quantity
+FROM Donor D
+RIGHT JOIN BloodDonation B
+ON D.DonorID = B.DonorID;
+
+SELECT
+    D.DonorName,
+    B.DonationDate,
+    B.Quantity
+FROM Donor D
+FULL OUTER JOIN BloodDonation B
+ON D.DonorID = B.DonorID;
+
+
+SELECT DonorName, Age
+FROM Donor
+WHERE Age >
+(
+    SELECT AVG(Age)
+    FROM Donor
+);
+
+
+SELECT D1.DonorName, D1.Age, D1.City
+FROM Donor D1
+WHERE D1.Age >
+(
+    SELECT AVG(D2.Age)
+    FROM Donor D2
+    WHERE D2.City = D1.City
+);
+
+
+USE bloodDB;
+GO
+
+CREATE VIEW DonorDonationView
+AS
+SELECT
+    D.DonorID,
+    D.DonorName,
+    D.BloodGroup,
+    B.DonationDate,
+    B.Quantity
+FROM Donor D
+INNER JOIN BloodDonation B
+ON D.DonorID = B.DonorID;
+GO
+
+SELECT * FROM DonorDonationView;
+
+
+CREATE SYNONYM DonorDetails
+FOR dbo.Donor;
+
+SELECT * FROM DonorDetails;
+
+USE bloodDB;
+GO
+
+CREATE SEQUENCE DonorSeq2
+START WITH 108
+INCREMENT BY 1;
+GO
+
+SELECT NEXT VALUE FOR DonorSeq2;
+
+CREATE INDEX idx_DonorName1
+ON Donor(DonorName);
+go
+
+EXEC sp_helpindex 'Donor';
+
+DECLARE @N INT = 10;
+DECLARE @i INT = 1;
+
+WHILE @i <= @N
+BEGIN
+    IF @i % 2 <> 0
+        PRINT @i;
+
+    SET @i = @i + 1;
+END;
+
+
+DECLARE @N1 INT = 10;
+DECLARE @i1 INT = 1;
+DECLARE @sum INT = 0;
+
+WHILE @i1 <= @N1
+BEGIN
+    SET @sum = @sum + @i1;
+    SET @i1 = @i1 + 1;
+END;
+
+PRINT @sum;
+
+DECLARE @N INT = 12345;
+DECLARE @rev INT = 0;
+DECLARE @rem INT;
+
+WHILE @N > 0
+BEGIN
+    SET @rem = @N % 10;
+    SET @rev = @rev * 10 + @rem;
+    SET @N = @N / 10;
+END;
+
+PRINT @rev;
+
+
+BEGIN TRY
+    SELECT 100 /0 AS Result;
+END TRY
+BEGIN CATCH
+    PRINT 'Error: Divide by zero is not allowed!';
+    PRINT ERROR_MESSAGE();
+END CATCH;
+
+BEGIN TRY
+    INSERT INTO Donor
+    (DonorID, DonorName, Age, Gender, BloodGroup, Phone, City)
+    VALUES
+    (901, 'Rahul Verma', 19, 'Male', 'O+', '9876540001', 'Bangalore');
+END TRY
+BEGIN CATCH
+    PRINT 'Error: Age must be at least 18!';
+    PRINT ERROR_MESSAGE();
+END CATCH;
+
+BEGIN TRY
+    INSERT INTO Donor
+    (DonorID, DonorName, Age, Gender, BloodGroup, Phone, City)
+    VALUES
+    (902, NULL, 25, 'Male', 'A+', '9876540002', 'Mysore');
+END TRY
+BEGIN CATCH
+    PRINT 'Error: Donor name cannot be NULL!';
+    PRINT ERROR_MESSAGE();
+END CATCH;
+
+select * from donor;
+
+
+USE bloodDB;
+GO
+
+-- Create Donor Table
+CREATE TABLE Donors
+(
+    DonorID INT PRIMARY KEY,
+    DonorName VARCHAR(50),
+    Age INT,
+    BloodGroup VARCHAR(5),
+    Phone VARCHAR(15)
+);
+
+-- Insert Records
+INSERT INTO Donors VALUES
+(100, 'Arun Kumar', 25, 'O+', '9876543210'),
+(101, 'Priya Sharma', 22, 'A+', '9876543211'),
+(102, 'Rahul Singh', 30, 'B+', '9876543212'),
+(103, 'Sneha Rao', 27, 'AB+', '9876543213'),
+(104, 'Kiran Kumar', 24, 'O-', '9876543214');
+
+-- Display Table
+SELECT * FROM Donors;
+
+-- Declare JSON Variable
+DECLARE @data NVARCHAR(MAX);
+
+-- Store JSON Data
+SET @data =
+'{
+    "DonorID": 100,
+    "DonorName": "Arun Kumar",
+    "Age": 25,
+    "BloodGroup": "O+",
+    "Phone": "9876543210"
+}';
+
+-- Display JSON Data
+SELECT @data AS JSONData;
+
+-- Extract JSON Values
+SELECT
+    JSON_VALUE(@data, '$.DonorID') AS DonorID,
+    JSON_VALUE(@data, '$.DonorName') AS DonorName,
+    JSON_VALUE(@data, '$.Age') AS Age,
+    JSON_VALUE(@data, '$.BloodGroup') AS BloodGroup,
+    JSON_VALUE(@data, '$.Phone') AS Phone;
+
+-- Check Valid JSON
+SELECT ISJSON(@data) AS IsValidJSON;
+
+-- Convert Table Data into JSON
+SELECT DonorID, DonorName, Age, BloodGroup, Phone
+FROM Donors
+FOR JSON PATH;
