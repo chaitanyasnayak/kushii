@@ -1,0 +1,323 @@
+
+
+CREATE TABLE Users (
+    user_id INT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    age INT CHECK(age >= 18),
+    email VARCHAR(50) UNIQUE
+);
+
+CREATE TABLE Food (
+    food_id INT PRIMARY KEY,
+    food_name VARCHAR(50) NOT NULL,
+    calories INT CHECK(calories > 0),
+    user_id INT FOREIGN KEY REFERENCES Users(user_id)
+);
+
+CREATE TABLE MealPlan (
+    meal_id INT PRIMARY KEY,
+    meal_name VARCHAR(50) NOT NULL,
+    meal_type VARCHAR(30),
+    user_id INT FOREIGN KEY REFERENCES Users(user_id)
+);
+
+CREATE TABLE Exercise (
+    exercise_id INT PRIMARY KEY,
+    exercise_name VARCHAR(50) NOT NULL,
+    duration INT CHECK(duration > 0),
+    calories_burned INT CHECK(calories_burned > 0),
+    user_id INT FOREIGN KEY REFERENCES Users(user_id)
+);
+
+-- Insert into Users
+INSERT INTO Users VALUES
+(1, 'Monika', 20, 'monika@gmail.com'),
+(2, 'Rahul', 22, 'rahul@gmail.com'),
+(3, 'Anu', 21, 'anu@gmail.com');
+
+-- Insert into Food
+INSERT INTO Food VALUES
+(101, 'Apple', 95, 1),
+(102, 'Banana', 105, 2),
+(103, 'Oats', 150, 3),
+(104, 'Egg', 78, 1);
+
+-- Insert into MealPlan
+INSERT INTO MealPlan VALUES
+(201, 'Oats Breakfast', 'Breakfast', 1),
+(202, 'Rice and Chicken', 'Lunch', 2),
+(203, 'Vegetable Salad', 'Dinner', 3),
+(204, 'Egg and Toast', 'Breakfast', 1);
+
+-- Insert into Exercise
+INSERT INTO Exercise VALUES
+(301, 'Running', 30, 250, 1),
+(302, 'Walking', 45, 180, 2),
+(303, 'Cycling', 40, 300, 3),
+(304, 'Yoga', 30, 120, 1);
+
+1a. SQL Operations (DDL, DML, DCL, TCL)
+1. DDL Commands
+CREATE TABLE Test (
+    id INT PRIMARY KEY,
+    name VARCHAR(20)
+);
+
+ALTER TABLE Test ADD age INT;
+
+TRUNCATE TABLE Test;
+
+DROP TABLE Test;
+
+2. DML Commands (WHERE, DISTINCT, GROUP BY, HAVING, ORDER BY)
+-- Basic DML
+INSERT INTO Users VALUES (4, 'Kiran', 25, 'kiran@gmail.com');
+UPDATE Users SET age = 21 WHERE user_id = 1;
+DELETE FROM Users WHERE user_id = 4;
+SELECT * FROM Users;
+
+-- WHERE
+SELECT * FROM Food WHERE calories > 100;
+
+-- DISTINCT
+SELECT DISTINCT meal_type FROM MealPlan;
+
+-- GROUP BY & HAVING
+SELECT user_id, AVG(calories) AS AvgCalories
+FROM Food
+GROUP BY user_id
+HAVING AVG(calories) > 90;
+
+-- ORDER BY
+SELECT * FROM Food ORDER BY calories DESC;
+
+3. DCL & TCL Commands
+-- DCL Commands
+GRANT SELECT ON Users TO PUBLIC;
+REVOKE SELECT ON Users FROM PUBLIC;
+
+-- TCL Commands
+BEGIN TRANSACTION;
+UPDATE Users SET age = 23 WHERE user_id = 2;
+ROLLBACK;
+
+BEGIN TRANSACTION;
+UPDATE Users SET age = 24 WHERE user_id = 2;
+COMMIT;
+
+BEGIN TRANSACTION;
+UPDATE Users SET age = 25 WHERE user_id = 2;
+SAVE TRANSACTION S1;
+UPDATE Users SET age = 30 WHERE user_id = 2;
+ROLLBACK TRANSACTION S1;
+COMMIT;
+
+1b. SQL Operations (Constraints & Functions)
+1. Integrity Constraints Violations
+-- 1. Primary Key Error (Duplicate ID)
+INSERT INTO Users VALUES (1, 'Test', 25, 'test1@gmail.com');
+
+-- 2. Unique Error (Duplicate Email)
+INSERT INTO Users VALUES (5, 'Test', 25, 'monika@gmail.com');
+
+-- 3. Check Constraint Error (Age < 18)
+INSERT INTO Users VALUES (6, 'Test', 15, 'test2@gmail.com');
+
+-- 4. Foreign Key Error (user_id 99 not found)
+INSERT INTO Food VALUES (105, 'Salad', 80, 99);
+
+2. Built-in Functions
+SELECT GETDATE();
+SELECT CAST(GETDATE() AS TIME);
+SELECT ROUND(125.678, 2);
+SELECT ABS(-50);
+SELECT CEILING(25.3);
+SELECT FLOOR(25.8);
+SELECT UPPER(name), LOWER(name) FROM Users;
+SELECT LEN(name) FROM Users;
+SELECT CONVERT(VARCHAR, age) FROM Users;
+SELECT CAST(age AS VARCHAR) FROM Users;
+
+1c. SQL Operations (Joins & Sub-queries)
+1. Joins
+-- INNER JOIN
+SELECT Users.name, Food.food_name
+FROM Users
+INNER JOIN Food ON Users.user_id = Food.user_id;
+
+-- LEFT JOIN
+SELECT Users.name, Food.food_name
+FROM Users
+LEFT JOIN Food ON Users.user_id = Food.user_id;
+
+-- RIGHT JOIN
+SELECT Users.name, Food.food_name
+FROM Users
+RIGHT JOIN Food ON Users.user_id = Food.user_id;
+
+-- FULL JOIN
+SELECT Users.name, Food.food_name
+FROM Users
+FULL JOIN Food ON Users.user_id = Food.user_id;
+
+-- CROSS JOIN
+SELECT Users.name, Food.food_name
+FROM Users
+CROSS JOIN Food;
+
+-- Join with MealPlan
+SELECT Users.name, MealPlan.meal_name, MealPlan.meal_type
+FROM Users
+INNER JOIN MealPlan ON Users.user_id = MealPlan.user_id;
+
+-- Join with Exercise
+SELECT Users.name, Exercise.exercise_name, Exercise.duration
+FROM Users
+INNER JOIN Exercise ON Users.user_id = Exercise.user_id;
+
+2. Sub-queries & Correlated Sub-queries
+-- Subquery 1
+SELECT name, age
+FROM Users
+WHERE age > (SELECT AVG(age) FROM Users);
+
+-- Subquery 2
+SELECT food_name, calories
+FROM Food
+WHERE calories > (SELECT AVG(calories) FROM Food);
+
+-- Correlated Subquery
+SELECT name
+FROM Users U
+WHERE EXISTS (
+    SELECT *
+    FROM Food F
+    WHERE F.user_id = U.user_id
+);
+
+2a. Database Optimization & T-SQL Loops
+1. Views, Synonyms, Sequences, Indexes
+-- View
+CREATE VIEW UserFood AS
+SELECT Users.name, Food.food_name, Food.calories
+FROM Users
+JOIN Food ON Users.user_id = Food.user_id;
+
+SELECT * FROM UserFood;
+
+-- Synonym
+CREATE SYNONYM FoodDetails FOR Food;
+SELECT * FROM FoodDetails;
+
+-- Sequence
+CREATE SEQUENCE UserSeq
+START WITH 1
+INCREMENT BY 1;
+
+SELECT NEXT VALUE FOR UserSeq;
+
+-- Index
+CREATE INDEX idx_user_name ON Users(name);
+SELECT * FROM Users WHERE name = 'Monika';
+
+2. T-SQL Loops
+-- 1. Print Odd Numbers from 1 to N
+DECLARE @n INT = 10;
+DECLARE @i INT = 1;
+WHILE @i <= @n
+BEGIN
+    PRINT @i;
+    SET @i = @i + 2;
+END;
+
+-- 2. Fibonacci Series Up to a Given Number
+DECLARE @n INT = 10;
+DECLARE @a INT = 0;
+DECLARE @b INT = 1;
+DECLARE @c INT;
+
+WHILE @a <= @n
+BEGIN
+    PRINT @a;
+    SET @c = @a + @b;
+    SET @a = @b;
+    SET @b = @c;
+END;
+
+-- 3. Sum of First N Natural Numbers
+DECLARE @n INT = 10;
+DECLARE @i INT = 1;
+DECLARE @sum INT = 0;
+
+WHILE @i <= @n
+BEGIN
+    SET @sum = @sum + @i;
+    SET @i = @i + 1;
+END;
+
+PRINT @sum;
+
+-- 4. Reverse a Given Number
+DECLARE @num INT = 12345;
+DECLARE @rev INT = 0;
+
+WHILE @num > 0
+BEGIN
+    SET @rev = (@rev * 10) + (@num % 10);
+    SET @num = @num / 10;
+END;
+
+PRINT @rev;
+
+2b. Database Optimization & Query Processing
+Error Handling and Exception Handling in SQL
+BEGIN TRY
+    SELECT 10 / 0 AS Result;
+END TRY
+BEGIN CATCH
+    PRINT 'Error occurred';
+END CATCH;
+
+BEGIN TRY
+    DECLARE @x INT = 10;
+    DECLARE @y INT = 0;
+    PRINT @x / @y;
+END TRY
+BEGIN CATCH
+    PRINT ERROR_MESSAGE();
+END CATCH;
+
+5. Implement JSON Datatypes
+CREATE TABLE UserJSON (
+    UserID INT PRIMARY KEY,
+    UserDetails NVARCHAR(MAX)
+);
+
+INSERT INTO UserJSON VALUES
+(1, '{"Name":"Monika","Age":20,"Goal":2000}'),
+(2, '{"Name":"Rahul","Age":22,"Goal":2200}'),
+(3, '{"Name":"Anu","Age":21,"Goal":1800}');
+
+-- Check Valid JSON and Select All
+SELECT UserDetails, ISJSON(UserDetails) AS IsValid
+FROM UserJSON;
+
+SELECT * FROM UserJSON;
+
+-- Extracting Values using JSON_VALUE
+SELECT JSON_VALUE(UserDetails, '$.Name') AS Name
+FROM UserJSON;
+
+SELECT JSON_VALUE(UserDetails, '$.Age') AS Age
+FROM UserJSON;
+
+SELECT JSON_VALUE(UserDetails, '$.Goal') AS CalorieGoal
+FROM UserJSON;
+
+-- Combined JSON Select Query
+SELECT
+    JSON_VALUE(UserDetails, '$.Name') AS Name,
+    JSON_VALUE(UserDetails, '$.Age') AS Age,
+    JSON_VALUE(UserDetails, '$.Goal') AS Goal
+FROM UserJSON;
+
