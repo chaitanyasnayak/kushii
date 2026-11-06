@@ -182,7 +182,6 @@ FULL OUTER JOIN Recharges R ON C.Customer_ID = R.Customer_ID;
 
 
 2
--- Customers who have made a recharge
 SELECT Customer_Name
 FROM Customers
 WHERE Customer_ID IN
@@ -339,14 +338,14 @@ VALUES (1, N'{
   "Validity":28
 }');
 
--- Display JSON
+
 SELECT * FROM Recharge_JSON;
 
--- Validate JSON
+
 SELECT ISJSON(Recharge_Details) AS JSON_Valid
 FROM Recharge_JSON;
 
--- Extract values
+
 SELECT
     JSON_VALUE(Recharge_Details,'$.Customer') AS Customer_Name,
     JSON_VALUE(Recharge_Details,'$.Operator') AS Operator_Name,
